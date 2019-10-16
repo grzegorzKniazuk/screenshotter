@@ -1,0 +1,21 @@
+{
+  "name": "Screenshotter",
+  "author": "Grzegorz Kniażuk",
+  "version": "1.0",
+  "description": "Screenshotter by Grzegorz",
+  "manifest_version": 2,
+  "browser_action": {
+    "default_icon": {
+      "16": "assets/browser-16.png",
+      "32": "assets/browser-32.png"
+    },
+    "default_title": "Make the screenshot!",
+    "default_popup": "index.html"
+  },
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "desktopCapture",
+    "tabCapture"
+  ]
+}

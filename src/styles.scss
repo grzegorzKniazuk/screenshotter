@@ -1,1 +1,8 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+    font: 10px 'Roboto', sans-serif;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 50rem;
+}
