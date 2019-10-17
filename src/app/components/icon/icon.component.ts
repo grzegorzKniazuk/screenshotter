@@ -7,5 +7,5 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent {
-    @Input() public readonly size: string;
+    @Input() public readonly size: string = '1';
 }

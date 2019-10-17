@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
-import { MatCardModule, MatIconModule, MatTabsModule } from '@angular/material';
+import { MatBadgeModule, MatCardModule, MatIconModule, MatTabsModule } from '@angular/material';
 
 const modules: any[] = [
     MatTabsModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    MatBadgeModule,
 ];
 
 @NgModule({

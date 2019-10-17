@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MAKE_SCREENSHOT } from 'src/app/store/images.actions';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store';
@@ -7,15 +7,13 @@ import { AppState } from 'src/app/store';
     selector: 'app-new-screenshot',
     templateUrl: './new-screenshot.component.html',
     styleUrls: [ './new-screenshot.component.scss', '../dashboard.component.scss' ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewScreenshotComponent implements OnInit {
+export class NewScreenshotComponent {
 
     constructor(
         private readonly store: Store<AppState>,
     ) {
-    }
-
-    ngOnInit() {
     }
 
     public makeScreenshot(): void {

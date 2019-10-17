@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Image } from 'src/app/interfaces/image';
 
 @Component({
@@ -7,14 +7,6 @@ import { Image } from 'src/app/interfaces/image';
     styleUrls: [ './image-card.component.scss' ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ImageCardComponent implements OnInit {
-
+export class ImageCardComponent {
     @Input() public readonly image: Image;
-
-    constructor() {
-    }
-
-    ngOnInit() {
-    }
-
 }
