@@ -1,0 +1,10 @@
+<div class="content-container">
+    <ng-container *ngIf="totalImages$ | async; else noImages">
+        <app-image-card *ngFor="let image of (images$ | async)" [image]="image"></app-image-card>
+    </ng-container>
+</div>
+
+<ng-template #noImages>
+    <app-icon size="15">error_outline</app-icon>
+    <p>No screenshots found</p>
+</ng-template>

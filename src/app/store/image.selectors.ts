@@ -1,9 +1,14 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { ImagesState, selectAll } from './images.reducer';
+import { ImagesState, selectAll, selectTotal } from './images.reducer';
 
 const selectImagesState = createFeatureSelector<ImagesState>('images');
 
-export const selectRecipes = createSelector(
+export const selectImages = createSelector(
     selectImagesState,
     selectAll,
+);
+
+export const selectTotalImages = createSelector(
+    selectImagesState,
+    selectTotal
 );

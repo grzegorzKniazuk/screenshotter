@@ -7,5 +7,5 @@ export const MAKE_SCREENSHOT = createAction(
 
 export const ADD_SCREENSHOT = createAction(
     '[images effects] add screenshot',
-    props<{ image: Image }>()
-)
+    props<{ image: Image }>(),
+);

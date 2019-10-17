@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Image } from 'src/app/interfaces/image';
 import { IMAGE_STORAGE_KEY } from 'src/app/constants/storage-keys';
 import { filter, first } from 'rxjs/operators';
@@ -18,7 +18,7 @@ export class ImageService {
     }
 
     public loadImages(): void {
-        this.storageMap.get(IMAGE_STORAGE_KEY).pipe(
+        (this.storageMap.get<Image[]>(IMAGE_STORAGE_KEY) as Observable<Image[]>).pipe(
             first(),
             filter((images: Image[] | undefined) => this.isArray(images)),
         ).subscribe((images: Image[]) => {

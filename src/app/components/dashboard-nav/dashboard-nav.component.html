@@ -1,9 +1,5 @@
-<button class="btn btn-success btn-block" (click)="makeScreenshot()">Make screenshot</button>
-<ul class="nav nav-pills nav-fill">
-    <li class="nav-item">
-        <a class="nav-link" routerLink="/gallery" routerLinkActive="active">Gallery</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" routerLink="/settings" routerLinkActive="active">Settings</a>
-    </li>
-</ul>
+<nav mat-tab-nav-bar>
+    <a mat-tab-link routerLink="/new-screenshot" routerLinkActive #newScreenshotLinkActive="routerLinkActive" [routerLinkActiveOptions]="{ exact: true }" [active]="newScreenshotLinkActive.isActive">New screenshot</a>
+    <a mat-tab-link routerLink="/gallery" routerLinkActive #galleryLinkActive="routerLinkActive" [routerLinkActiveOptions]="{ exact: true }" [active]="galleryLinkActive.isActive">Gallery</a>
+    <a mat-tab-link routerLink="/settings" routerLinkActive #settingsLinkActive="routerLinkActive" [routerLinkActiveOptions]="{ exact: true }" [active]="settingsLinkActive.isActive">Settings</a>
+</nav>

@@ -11,9 +11,11 @@ import { environment } from 'src/environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { appReducers } from 'src/app/store';
 import { AppRoutingModule } from 'src/app/app-routing.module';
-import { DashboardComponent, ScreenshotGalleryComponent, SettingsComponent } from 'src/app/views';
-import { DashboardNavComponent, ImageCardComponent } from 'src/app/components';
+import { DashboardComponent, NewScreenshotComponent, ScreenshotGalleryComponent, SettingsComponent } from 'src/app/views';
+import { DashboardNavComponent, IconComponent, ImageCardComponent } from 'src/app/components';
 import { ImagesEffects } from 'src/app/store/images.effects';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from 'src/app/material.module';
 
 @NgModule({
     declarations: [
@@ -23,9 +25,13 @@ import { ImagesEffects } from 'src/app/store/images.effects';
         SettingsComponent,
         ImageCardComponent,
         DashboardNavComponent,
+        NewScreenshotComponent,
+        IconComponent,
     ],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
+        MaterialModule,
         AppRoutingModule,
         StorageModule.forRoot(STORAGE_MODULE_CONFIG),
         StoreModule.forRoot(appReducers, { runtimeChecks: RUNTIME_CHECKS }),

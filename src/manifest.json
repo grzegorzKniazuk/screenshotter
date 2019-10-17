@@ -15,7 +15,7 @@
   "permissions": [
     "activeTab",
     "contextMenus",
-    "desktopCapture",
-    "tabCapture"
+    "tabCapture",
+    "tabs"
   ]
 }
