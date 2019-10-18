@@ -13,9 +13,13 @@
     "default_popup": "index.html"
   },
   "permissions": [
-    "activeTab",
-    "contextMenus",
     "tabCapture",
-    "tabs"
-  ]
+    "tabs",
+    "storage",
+    "notifications",
+    "activeTab"
+  ],
+  "background": {
+    "scripts": ["main.js"]
+  }
 }

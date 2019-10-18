@@ -1,6 +1,8 @@
-<div class="content-container">
+<div class="content-container" [class.no-images]="!(totalImages$ | async)">
     <ng-container *ngIf="totalImages$ | async; else noImages">
-        <app-image-card *ngFor="let image of (images$ | async)" [image]="image"></app-image-card>
+        <div class="screenshot" *ngFor="let image of (images$ | async)">
+            <app-image-card [image]="image" (onDelete)="onScreenshotDelete($event)"></app-image-card>
+        </div>
     </ng-container>
 </div>
 

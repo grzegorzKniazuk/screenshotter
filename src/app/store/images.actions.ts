@@ -6,6 +6,16 @@ export const MAKE_SCREENSHOT = createAction(
 );
 
 export const ADD_SCREENSHOT = createAction(
-    '[images effects] add screenshot',
+    '[screenshot effects] add screenshot',
     props<{ image: Image }>(),
+);
+
+export const ADD_SCREENSHOTS = createAction(
+    '[screenshots effects] add screenshots',
+    props<{ images: Image[] }>(),
+);
+
+export const DELETE_SCREENSHOT = createAction(
+    '[screenshot card] delete screenshot',
+    props<{ id: string }>(),
 );

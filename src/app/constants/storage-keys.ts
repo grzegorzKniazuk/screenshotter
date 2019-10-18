@@ -1,1 +1,1 @@
-export const IMAGE_STORAGE_KEY = 'screenshotter-images';
+export const SCREENSHOT_STORAGE_KEY = 'screenshotter-images';

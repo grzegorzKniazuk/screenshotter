@@ -2,8 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { StorageModule } from '@ngx-pwa/local-storage';
-import { RUNTIME_CHECKS, STORAGE_MODULE_CONFIG, STORE_ROUTER_CONNECTING_CONFIG } from 'src/app/constants';
+import { RUNTIME_CHECKS, STORE_ROUTER_CONNECTING_CONFIG } from 'src/app/constants';
 import { StoreModule } from '@ngrx/store';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { EffectsModule } from '@ngrx/effects';
@@ -33,7 +32,6 @@ import { MaterialModule } from 'src/app/material.module';
         BrowserAnimationsModule,
         MaterialModule,
         AppRoutingModule,
-        StorageModule.forRoot(STORAGE_MODULE_CONFIG),
         StoreModule.forRoot(appReducers, { runtimeChecks: RUNTIME_CHECKS }),
         StoreRouterConnectingModule.forRoot(STORE_ROUTER_CONNECTING_CONFIG),
         EffectsModule.forRoot([ ImagesEffects ]),

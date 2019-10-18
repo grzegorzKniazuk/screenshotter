@@ -2,6 +2,7 @@
 
 mat-icon.custom-mat-icon {
     cursor: pointer;
+    user-select: none;
 
     &:hover {
         color: #1a237e;

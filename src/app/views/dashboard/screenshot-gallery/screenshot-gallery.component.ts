@@ -4,6 +4,7 @@ import { AppState } from 'src/app/store';
 import { Observable } from 'rxjs';
 import { Image } from 'src/app/interfaces/image';
 import { selectImages, selectTotalImages } from 'src/app/store/image.selectors';
+import { DELETE_SCREENSHOT } from 'src/app/store/images.actions';
 
 @Component({
     selector: 'app-screenshot-gallery',
@@ -19,5 +20,9 @@ export class ScreenshotGalleryComponent {
     constructor(
         private readonly store: Store<AppState>,
     ) {
+    }
+
+    public onScreenshotDelete(id: string): void {
+        this.store.dispatch(DELETE_SCREENSHOT({ id }));
     }
 }

@@ -23,7 +23,6 @@
     "@ngrx/router-store": "^8.4.0",
     "@ngrx/store": "^8.4.0",
     "@ngrx/store-devtools": "^8.4.0",
-    "@ngx-pwa/local-storage": "^8.2.3",
     "reset-css": "^5.0.0",
     "rxjs": "~6.5.3",
     "tslib": "^1.10.0",

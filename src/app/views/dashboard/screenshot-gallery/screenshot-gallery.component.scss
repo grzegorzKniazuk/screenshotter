@@ -1,7 +1,17 @@
 .content-container {
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-flow: row wrap;
+
+    &.no-images {
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .screenshot {
+        margin: 1.5rem;
+    }
 
     p {
         font-size: 1.2rem;

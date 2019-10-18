@@ -1,7 +1,8 @@
 export interface Image {
     id: string;
-    name: string;
+    title: string;
+    url: string;
     page: string;
     src: string;
-    time: Date;
+    time: string;
 }
