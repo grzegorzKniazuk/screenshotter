@@ -53,7 +53,7 @@ export class ScreenshotsEffects implements OnInitEffects {
                                 time: '',
                                 title,
                                 url,
-                                size: window.atob(dataUrl.split(',')[1]).length,
+                                size: this.dataUrlToBytes(dataUrl),
                                 format: fileFormat,
                                 quality: fileFormat === FileFormat.JPEG ? fileQuality : 100,
                             },
@@ -94,7 +94,7 @@ export class ScreenshotsEffects implements OnInitEffects {
             ofType(DOWNLOAD_SCREENSHOT),
             DownloadsService.browserDownloadsApiAvailability(),
             withLatestFrom(this.store.pipe(select(selectSettingsState))),
-            tap(([{ data, filename }, { conflictAction, alwaysShowSaveAs} ]: [ DownloadScreenshotDto, Settings ]) => {
+            tap(([ { data, filename }, { conflictAction, alwaysShowSaveAs } ]: [ DownloadScreenshotDto, Settings ]) => {
                 this.downloadsService.download({ url: data, filename, conflictAction, saveAs: alwaysShowSaveAs });
             }),
         );
@@ -111,5 +111,9 @@ export class ScreenshotsEffects implements OnInitEffects {
 
     ngrxOnInitEffects(): Action {
         return { type: ROOT_EFFECTS_INIT };
+    }
+
+    private dataUrlToBytes(dataUrl: string): number {
+        return window.atob(dataUrl.split(',')[1]).length;
     }
 }

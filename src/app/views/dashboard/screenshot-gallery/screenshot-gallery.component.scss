@@ -3,6 +3,10 @@
     align-items: flex-start;
     flex-flow: row wrap;
 
+    &.more-than-one {
+        justify-content: center;
+    }
+
     &.no-images {
         justify-content: center;
         align-items: center;
