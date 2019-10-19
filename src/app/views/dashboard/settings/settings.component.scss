@@ -1,0 +1,17 @@
+.content-container {
+    form {
+        display: flex;
+        flex-flow: nowrap column;
+        width: 100%;
+        padding: 0 1rem;
+
+        mat-radio-button {
+            margin: 5px;
+        }
+
+        label {
+            margin-top: 1.5rem;
+        }
+    }
+
+}

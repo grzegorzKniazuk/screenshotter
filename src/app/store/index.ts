@@ -1,13 +1,15 @@
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import { ActionReducerMap } from '@ngrx/store';
-import { imagesReducer, ImagesState } from 'src/app/store/images.reducer';
+import { screenshotsReducer, ScreenshotsState, settingsReducer, SettingsState } from 'src/app/store/reducers';
 
 export interface AppState {
     router: RouterReducerState;
-    images: ImagesState;
+    screenshots: ScreenshotsState;
+    settings: SettingsState;
 }
 
 export const appReducers: ActionReducerMap<AppState> = {
     router: routerReducer,
-    images: imagesReducer,
+    screenshots: screenshotsReducer,
+    settings: settingsReducer,
 };

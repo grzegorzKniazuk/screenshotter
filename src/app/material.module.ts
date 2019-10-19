@@ -1,5 +1,13 @@
 import { NgModule } from '@angular/core';
-import { MatBadgeModule, MatButtonModule, MatCardModule, MatIconModule, MatTabsModule } from '@angular/material';
+import {
+    MatBadgeModule,
+    MatButtonModule,
+    MatCardModule, MatFormFieldModule,
+    MatIconModule,
+    MatRadioModule,
+    MatSliderModule,
+    MatTabsModule,
+} from '@angular/material';
 
 const modules: any[] = [
     MatTabsModule,
@@ -7,6 +15,9 @@ const modules: any[] = [
     MatCardModule,
     MatBadgeModule,
     MatButtonModule,
+    MatRadioModule,
+    MatSliderModule,
+    MatFormFieldModule,
 ];
 
 @NgModule({

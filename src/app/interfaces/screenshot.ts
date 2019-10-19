@@ -1,4 +1,4 @@
-export interface Image {
+export interface Screenshot {
     id: string;
     title: string;
     url: string;

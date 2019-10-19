@@ -12,9 +12,10 @@ import { appReducers } from 'src/app/store';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { DashboardComponent, NewScreenshotComponent, ScreenshotGalleryComponent, SettingsComponent } from 'src/app/views';
 import { DashboardNavComponent, IconComponent, ImageCardComponent } from 'src/app/components';
-import { ImagesEffects } from 'src/app/store/images.effects';
+import { ScreenshotsEffects, SettingsEffects } from 'src/app/store/effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from 'src/app/material.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -31,13 +32,13 @@ import { MaterialModule } from 'src/app/material.module';
         BrowserModule,
         BrowserAnimationsModule,
         MaterialModule,
+        ReactiveFormsModule,
         AppRoutingModule,
         StoreModule.forRoot(appReducers, { runtimeChecks: RUNTIME_CHECKS }),
         StoreRouterConnectingModule.forRoot(STORE_ROUTER_CONNECTING_CONFIG),
-        EffectsModule.forRoot([ ImagesEffects ]),
+        EffectsModule.forRoot([ ScreenshotsEffects, SettingsEffects ]),
         environment.production ? [] : [ StoreDevtoolsModule.instrument() ],
     ],
-    providers: [],
     bootstrap: [ AppComponent ],
 })
 export class AppModule {

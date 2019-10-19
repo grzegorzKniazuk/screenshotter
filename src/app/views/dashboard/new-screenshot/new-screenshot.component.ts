@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MAKE_SCREENSHOT } from 'src/app/store/images.actions';
+import { MAKE_SCREENSHOT } from 'src/app/store/actions';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store';
 

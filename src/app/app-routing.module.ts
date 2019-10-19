@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent, NewScreenshotComponent, ScreenshotGalleryComponent, SettingsComponent } from 'src/app/views';
+import { SettingsResolver } from 'src/app/resolvers';
 
 const routes: Routes = [
     {
@@ -21,6 +22,7 @@ const routes: Routes = [
             {
                 path: 'settings',
                 component: SettingsComponent,
+                resolve: { 'screenshot-settings': SettingsResolver },
             },
         ],
     },

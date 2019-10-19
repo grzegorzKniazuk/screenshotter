@@ -5,7 +5,7 @@
     </mat-card-header>
     <img mat-card-image [src]="image.src" [alt]="image.title">
     <mat-card-content>
-        <a [href]="image.url" [title]="image.url">source</a>
+        <a [href]="image.url" [title]="image.url" (click)="onOpenSource()">source</a>
     </mat-card-content>
     <mat-card-actions>
         <button mat-button mat-raised-button color="primary">Save</button>

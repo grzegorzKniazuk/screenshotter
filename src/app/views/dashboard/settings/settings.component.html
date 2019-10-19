@@ -1,3 +1,10 @@
 <div class="content-container">
-    <p>settings works!</p>
+    <form [formGroup]="settingsForm">
+        <label id="file-type-group-label">Screenshot file format</label>
+        <mat-radio-group aria-labelledby="file-type-group-label" class="example-radio-group" formControlName="fileFormat">
+            <mat-radio-button class="example-radio-button" *ngFor="let fileFormat of fileFormats" [value]="fileFormat">{{ fileFormat }}</mat-radio-button>
+        </mat-radio-group>
+        <label id="file-quality-label">Screenshot quality <mat-hint>(only jpeg)</mat-hint></label>
+        <mat-slider aria-labelledby="file-quality-label" thumbLabel min="1" step="1" max="100" formControlName="fileQuality"></mat-slider>
+    </form>
 </div>
