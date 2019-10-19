@@ -1,5 +1,5 @@
 import { Settings } from 'src/app/interfaces';
-import { FileFormat } from 'src/app/enums';
+import { ConflictAction, FileFormat } from 'src/app/enums';
 import { Action, createReducer, on } from '@ngrx/store';
 import { UPDATE_SETTINGS } from 'src/app/store/actions';
 
@@ -10,6 +10,8 @@ export interface SettingsState extends Settings {
 const initialSettingsState: SettingsState = {
     fileFormat: FileFormat.JPEG,
     fileQuality: 100,
+    conflictAction: ConflictAction.UNIQUIFY,
+    alwaysShowSaveAs: false,
 };
 
 const reducer = createReducer(

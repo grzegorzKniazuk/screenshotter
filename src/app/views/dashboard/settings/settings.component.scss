@@ -1,17 +1,34 @@
-.content-container {
+div.content-container {
     form {
         display: flex;
-        flex-flow: nowrap column;
-        width: 100%;
-        padding: 0 1rem;
+        justify-content: center;
 
-        mat-radio-button {
-            margin: 5px;
-        }
-
-        label {
-            margin-top: 1.5rem;
+        mat-accordion.mat-accordion {
+            mat-expansion-panel.mat-expansion-panel {
+                width: 46rem;
+            }
         }
     }
+}
 
+div.form-panel-content {
+    display: flex;
+    flex-flow: nowrap column;
+    width: 100%;
+
+    label {
+        margin-top: 1.25rem;
+    }
+
+    label:first-of-type {
+        margin-top: 0;
+    }
+
+    mat-radio-button, mat-slide-toggle {
+        margin: .3125rem;
+    }
+}
+
+::ng-deep .mat-expansion-panel-content {
+    font-size: 1rem;
 }

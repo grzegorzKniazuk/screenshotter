@@ -9,7 +9,7 @@ import {
     MAKE_SCREENSHOT,
     OPEN_SOURCE,
 } from 'src/app/store/actions';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 import { AppState } from 'src/app/store/index';
 import { Screenshot, Settings } from 'src/app/interfaces';
@@ -17,7 +17,7 @@ import Tab = chrome.tabs.Tab;
 import { StorageService, TabsService } from 'src/app/services';
 import { SCREENSHOTS_STORAGE_KEY } from 'src/app/constants';
 import { selectScreenshots, selectSettingsState } from 'src/app/store/selectors';
-import { ConflictAction, FileFormat } from 'src/app/enums';
+import { FileFormat } from 'src/app/enums';
 import { DownloadsService } from 'src/app/services/downloads.service';
 import { DownloadScreenshotDto } from 'src/app/dto';
 
@@ -93,8 +93,9 @@ export class ScreenshotsEffects implements OnInitEffects {
         return this.actions$.pipe(
             ofType(DOWNLOAD_SCREENSHOT),
             DownloadsService.browserDownloadsApiAvailability(),
-            tap(({ data, filename }: DownloadScreenshotDto) => {
-                this.downloadsService.download({ url: data, filename, conflictAction: ConflictAction.UNIQUIFY, saveAs: true });
+            withLatestFrom(this.store.pipe(select(selectSettingsState))),
+            tap(([{ data, filename }, { conflictAction, alwaysShowSaveAs} ]: [ DownloadScreenshotDto, Settings ]) => {
+                this.downloadsService.download({ url: data, filename, conflictAction, saveAs: alwaysShowSaveAs });
             }),
         );
     }, { dispatch: false });

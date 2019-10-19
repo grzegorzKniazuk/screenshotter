@@ -1,10 +1,36 @@
 <div class="content-container">
     <form [formGroup]="settingsForm">
-        <label id="file-type-group-label">Screenshot file format</label>
-        <mat-radio-group aria-labelledby="file-type-group-label" class="example-radio-group" formControlName="fileFormat">
-            <mat-radio-button class="example-radio-button" *ngFor="let fileFormat of fileFormats" [value]="fileFormat">{{ fileFormat }}</mat-radio-button>
-        </mat-radio-group>
-        <label id="file-quality-label">Screenshot quality <mat-hint>(only jpeg)</mat-hint></label>
-        <mat-slider aria-labelledby="file-quality-label" thumbLabel min="1" step="1" max="100" formControlName="fileQuality"></mat-slider>
+        <mat-accordion [multi]="true">
+            <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Capture options
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="form-panel-content">
+                    <label id="file-type-group-label">Screenshot file format</label>
+                    <mat-radio-group aria-labelledby="file-type-group-label" formControlName="fileFormat">
+                        <mat-radio-button *ngFor="let fileFormat of fileFormats" [value]="fileFormat">{{ fileFormat }}</mat-radio-button>
+                    </mat-radio-group>
+                    <label id="file-quality-label">Screenshot quality<mat-hint>(only jpeg)</mat-hint></label>
+                    <mat-slider aria-labelledby="file-quality-label" thumbLabel min="1" step="1" max="100" formControlName="fileQuality"></mat-slider>
+                </div>
+            </mat-expansion-panel>
+            <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Download options
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="form-panel-content">
+                    <label id="conflict-action-group-label">Action to take if filename already exists</label>
+                    <mat-radio-group aria-labelledby="conflict-action-group-label" formControlName="conflictAction">
+                        <mat-radio-button *ngFor="let conflictAction of conflictActions" [value]="conflictAction">{{ conflictAction }}</mat-radio-button>
+                    </mat-radio-group>
+                    <label id="save-as-label">Use a file-chooser to select a filename regardless of whether filename is set or already exists</label>
+                    <mat-slide-toggle aria-labelledby="save-as-label" formControlName="alwaysShowSaveAs">{{ alwaysShowSaveAsControl.value ? 'Yes' : 'No' }}</mat-slide-toggle>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
     </form>
 </div>

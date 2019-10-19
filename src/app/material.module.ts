@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import {
     MatBadgeModule,
     MatButtonModule,
-    MatCardModule, MatChipsModule, MatFormFieldModule,
-    MatIconModule,
+    MatCardModule, MatChipsModule, MatExpansionModule, MatFormFieldModule,
+    MatIconModule, MatInputModule,
     MatRadioModule,
-    MatSliderModule,
+    MatSliderModule, MatSlideToggleModule,
     MatTabsModule, MatTooltipModule,
 } from '@angular/material';
 
@@ -20,6 +20,9 @@ const modules: any[] = [
     MatFormFieldModule,
     MatTooltipModule,
     MatChipsModule,
+    MatExpansionModule,
+    MatInputModule,
+    MatSlideToggleModule,
 ];
 
 @NgModule({

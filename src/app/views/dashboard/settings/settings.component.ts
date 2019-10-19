@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
-import { FileFormat } from 'src/app/enums';
+import { ConflictAction, FileFormat } from 'src/app/enums';
 import { Subscription } from 'rxjs';
 import { tap, throttleTime } from 'rxjs/operators';
 import { Settings } from 'src/app/interfaces';
@@ -20,6 +20,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     private readonly subscriptions$: Subscription = new Subscription();
     public readonly fileFormats = [ FileFormat.JPEG, FileFormat.PNG ];
+    public readonly conflictActions = [ ConflictAction.UNIQUIFY, ConflictAction.OVERWRITE, ConflictAction.PROMPT ];
     private settings: Settings = this.activatedRoute.snapshot.data[SETTINGS_STORAGE_KEY];
     public settingsForm: FormGroup;
 
@@ -44,13 +45,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.settingsForm = this.formBuilder.group({
             fileFormat: [ this.settings.fileFormat || FileFormat.JPEG ],
             fileQuality: [ this.settings.fileQuality || 100 ],
+            conflictAction: [ this.settings.conflictAction || ConflictAction.UNIQUIFY ],
+            alwaysShowSaveAs: [ this.settings.alwaysShowSaveAs || false ],
         });
     }
 
     private watchForm(): void {
         this.settingsForm.valueChanges.pipe(
             tap(({ fileFormat }: Settings) => this.conditionallyDisableFileQuality(fileFormat)),
-            throttleTime(500)
+            throttleTime(500),
         ).subscribe(() => {
             this.store.dispatch(UPDATE_SETTINGS({ settings: { ...this.settingsForm.getRawValue() } }));
         });
@@ -66,5 +69,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     private get fileQualityControl(): AbstractControl {
         return this.settingsForm.get('fileQuality');
+    }
+
+    public get alwaysShowSaveAsControl(): AbstractControl {
+        return this.settingsForm.get('alwaysShowSaveAs');
     }
 }
