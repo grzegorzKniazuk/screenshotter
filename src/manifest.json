@@ -17,7 +17,8 @@
     "tabs",
     "storage",
     "notifications",
-    "activeTab"
+    "activeTab",
+    "downloads"
   ],
   "background": {
     "scripts": ["main.js"]

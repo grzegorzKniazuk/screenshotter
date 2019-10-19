@@ -4,7 +4,7 @@ export interface Screenshot {
     id: string;
     title: string;
     url: string;
-    src: string;
+    data: string;
     time: string;
     quality: number;
     format: FileFormat;

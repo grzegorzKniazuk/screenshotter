@@ -21,7 +21,5 @@ export class StorageService extends ApiService {
 
     public remove(keys: string | string[], callback?: () => void): void {
         this.chrome.storage.local.remove(keys, callback);
-        const error = this.chrome.runtime.lastError;
-        console.log(error);
     }
 }

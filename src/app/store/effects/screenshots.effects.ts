@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType, OnInitEffects, ROOT_EFFECTS_INIT } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
-import { ADD_SCREENSHOT, ADD_SCREENSHOTS, DELETE_SCREENSHOT, MAKE_SCREENSHOT, OPEN_SOURCE } from 'src/app/store/actions';
+import {
+    ADD_SCREENSHOT,
+    ADD_SCREENSHOTS,
+    DELETE_SCREENSHOT,
+    DOWNLOAD_SCREENSHOT,
+    MAKE_SCREENSHOT,
+    OPEN_SOURCE,
+} from 'src/app/store/actions';
 import { switchMap, tap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 import { AppState } from 'src/app/store/index';
@@ -10,7 +17,9 @@ import Tab = chrome.tabs.Tab;
 import { StorageService, TabsService } from 'src/app/services';
 import { SCREENSHOTS_STORAGE_KEY } from 'src/app/constants';
 import { selectScreenshots, selectSettingsState } from 'src/app/store/selectors';
-import { FileFormat } from 'src/app/enums';
+import { ConflictAction, FileFormat } from 'src/app/enums';
+import { DownloadsService } from 'src/app/services/downloads.service';
+import { DownloadScreenshotDto } from 'src/app/dto';
 
 @Injectable()
 export class ScreenshotsEffects implements OnInitEffects {
@@ -40,7 +49,7 @@ export class ScreenshotsEffects implements OnInitEffects {
                         this.store.dispatch(ADD_SCREENSHOT({
                             screenshot: {
                                 id: uuid(),
-                                src: dataUrl,
+                                data: dataUrl,
                                 time: '',
                                 title,
                                 url,
@@ -80,11 +89,22 @@ export class ScreenshotsEffects implements OnInitEffects {
         );
     }, { dispatch: false });
 
+    public readonly onDownloadScreenshot$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(DOWNLOAD_SCREENSHOT),
+            DownloadsService.browserDownloadsApiAvailability(),
+            tap(({ data, filename }: DownloadScreenshotDto) => {
+                this.downloadsService.download({ url: data, filename, conflictAction: ConflictAction.UNIQUIFY, saveAs: true });
+            }),
+        );
+    }, { dispatch: false });
+
     constructor(
         private readonly actions$: Actions,
         private readonly store: Store<AppState>,
         private readonly storageService: StorageService,
         private readonly tabsService: TabsService,
+        private readonly downloadsService: DownloadsService,
     ) {
     }
 
