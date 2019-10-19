@@ -1,0 +1,22 @@
+mat-card.screenshot-card {
+    width: 20rem;
+
+    mat-card-content.mat-card-content {
+        display: flex;
+        justify-content: center;
+    }
+
+    mat-card-actions.mat-card-actions {
+        display: flex;
+        justify-content: space-between;
+
+        button.mat-button {
+            margin: 0;
+
+            span {
+                font-size: .85rem;
+                margin-left: .5rem;
+            }
+        }
+    }
+}

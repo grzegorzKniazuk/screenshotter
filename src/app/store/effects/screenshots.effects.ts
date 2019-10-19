@@ -10,6 +10,7 @@ import Tab = chrome.tabs.Tab;
 import { StorageService, TabsService } from 'src/app/services';
 import { SCREENSHOTS_STORAGE_KEY } from 'src/app/constants';
 import { selectScreenshots, selectSettingsState } from 'src/app/store/selectors';
+import { FileFormat } from 'src/app/enums';
 
 @Injectable()
 export class ScreenshotsEffects implements OnInitEffects {
@@ -36,7 +37,18 @@ export class ScreenshotsEffects implements OnInitEffects {
                     const { title, url } = tabs.find((tab: Tab) => tab.active);
 
                     this.tabsService.captureVisibleTab({ format: fileFormat, quality: fileQuality }, (dataUrl: string) => {
-                        this.store.dispatch(ADD_SCREENSHOT({ screenshot: { id: uuid(), src: dataUrl, time: '', title, url, page: '' } }));
+                        this.store.dispatch(ADD_SCREENSHOT({
+                            screenshot: {
+                                id: uuid(),
+                                src: dataUrl,
+                                time: '',
+                                title,
+                                url,
+                                size: window.atob(dataUrl.split(',')[1]).length,
+                                format: fileFormat,
+                                quality: fileFormat === FileFormat.JPEG ? fileQuality : 100,
+                            },
+                        }));
                     });
                 });
             }),

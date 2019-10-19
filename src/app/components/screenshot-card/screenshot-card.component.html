@@ -1,0 +1,25 @@
+<mat-card class="screenshot-card">
+    <mat-card-header>
+        <mat-card-title>{{ screenshot.title }}</mat-card-title>
+        <mat-card-subtitle>{{ screenshot.time }}</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image [src]="screenshot.src" [alt]="screenshot.title">
+    <mat-card-content>
+        <mat-chip-list>
+            <mat-chip *ngIf="screenshot.size" matTooltip="Screenshot size">{{ screenshot.size | bytesTo:'mb' | number:'0.2-2' }} MB</mat-chip>
+            <mat-chip *ngIf="screenshot.format" matTooltip="Screenshot format">{{ screenshot.format }}</mat-chip>
+            <mat-chip *ngIf="screenshot.quality" matTooltip="Screenshot quality">{{ screenshot.quality }}/100</mat-chip>
+        </mat-chip-list>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button mat-raised-button color="primary">
+            <app-icon>cloud_download</app-icon><span>Save</span>
+        </button>
+        <button mat-button mat-raised-button (click)="onOpenSource()" [matTooltip]="screenshot.url">
+            <app-icon>link</app-icon><span>Source</span>
+        </button>
+        <button mat-button mat-raised-button color="warn" (click)="onScreenshotDelete()">
+            <app-icon>delete</app-icon><span>Delete</span>
+        </button>
+    </mat-card-actions>
+</mat-card>

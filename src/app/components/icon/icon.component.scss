@@ -1,11 +1,14 @@
 @import "constants.scss";
 
 mat-icon.custom-mat-icon {
-    cursor: pointer;
     user-select: none;
 
-    &:hover {
-        color: #1a237e;
-        transition: color $base-animation-duration ease-in-out;
+    &.action {
+        cursor: pointer;
+
+        &:hover {
+            color: #1a237e;
+            transition: color $base-animation-duration ease-in-out;
+        }
     }
 }
