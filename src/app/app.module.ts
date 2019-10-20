@@ -16,7 +16,7 @@ import { ScreenshotsEffects, SettingsEffects } from 'src/app/store/effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { BytesToPipe } from 'src/app/pipes';
+import { BytesToPipe, ScreenshotFilterPipe } from 'src/app/pipes';
 import { LazyLoadImageDirective } from 'src/app/directives';
 
 const components: any[] = [
@@ -33,6 +33,7 @@ const components: any[] = [
 
 const pipes: any[] = [
     BytesToPipe,
+    ScreenshotFilterPipe,
 ];
 
 const directives: any[] = [

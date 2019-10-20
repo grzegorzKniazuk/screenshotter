@@ -31,6 +31,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
     ) {
     }
 
+    public get autoDownloadControl(): AbstractControl {
+        return this.settingsForm.get('autoDownload');
+    }
+
     public get alwaysShowSaveAsControl(): AbstractControl {
         return this.settingsForm.get('alwaysShowSaveAs');
     }
@@ -55,6 +59,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     private buildForm(): void {
         this.settingsForm = this.formBuilder.group({
+            autoDownload: [ this.settings.autoDownload ],
             fileFormat: [ this.settings.fileFormat || FileFormat.JPEG ],
             fileQuality: [ this.settings.fileQuality || 100 ],
             conflictAction: [ this.settings.conflictAction || ConflictAction.UNIQUIFY ],
@@ -63,12 +68,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
 
     private watchForm(): void {
-        this.settingsForm.valueChanges.pipe(
-            tap(({ fileFormat }: Settings) => this.conditionallyDisableFileQuality(fileFormat)),
-            throttleTime(500),
-        ).subscribe(() => {
-            this.store.dispatch(UPDATE_SETTINGS({ settings: { ...this.settingsForm.getRawValue() } }));
-        });
+        this.subscriptions$.add(
+            this.settingsForm.valueChanges.pipe(
+                tap(({ fileFormat }: Settings) => this.conditionallyDisableFileQuality(fileFormat)),
+                throttleTime(500),
+            ).subscribe(() => {
+                this.store.dispatch(UPDATE_SETTINGS({ settings: { ...this.settingsForm.getRawValue() } }));
+            }),
+        );
     }
 
     private conditionallyDisableFileQuality(fileFormat: FileFormat): void {

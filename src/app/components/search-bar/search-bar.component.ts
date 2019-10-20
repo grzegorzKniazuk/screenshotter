@@ -1,8 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { Order, OrderBy } from 'src/app/enums';
-import { SearchParamsDto } from 'src/app/dto/search-params.dto';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-search-bar',
@@ -12,12 +10,10 @@ import { SearchParamsDto } from 'src/app/dto/search-params.dto';
 })
 export class SearchBarComponent implements OnInit, OnDestroy {
 
-    private readonly subscriptions$ = new Subscription();
     public searchForm: FormGroup;
-    public searchOrder: Order = Order.ASC;
-    public orderBy: OrderBy = OrderBy.Date;
-    public readonly orderByOptions: OrderBy[] = [ OrderBy.Date, OrderBy.Name, OrderBy.Quality, OrderBy.Size ];
-    public onSearch = new EventEmitter<SearchParamsDto>();
+    public isSearchBarOpened$ = new BehaviorSubject<boolean>(false);
+    @Output() public readonly onSearch = new EventEmitter<string>();
+    private readonly subscriptions$ = new Subscription();
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -26,6 +22,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.buildForm();
+        this.watchQuery();
     }
 
     ngOnDestroy() {
@@ -38,15 +35,20 @@ export class SearchBarComponent implements OnInit, OnDestroy {
         });
     }
 
-    public setSearchOrder(): void {
-        if (this.searchOrder === Order.ASC) {
-            this.searchOrder = Order.DESC;
-        } else {
-            this.searchOrder = Order.ASC;
-        }
+    private watchQuery(): void {
+        this.subscriptions$.add(this.queryControl.valueChanges.subscribe((query: string) => this.onSearch.emit(query)));
     }
 
-    public setOrderBy(orderBy: OrderBy): void {
-        this.orderBy = orderBy;
+    private get queryControl(): AbstractControl {
+        return this.searchForm.get('query');
     }
+
+    public openSearchBar(): void {
+        this.isSearchBarOpened$.next(true);
+    }
+
+    public onInputFocusOut(): void {
+        this.isSearchBarOpened$.next(false);
+    }
+
 }

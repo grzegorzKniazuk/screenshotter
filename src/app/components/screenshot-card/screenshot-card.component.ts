@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Screenshot } from 'src/app/interfaces/screenshot';
 import { DownloadScreenshotDto } from 'src/app/dto';
+import { ScreenshotsEffects } from 'src/app/store/effects';
 
 @Component({
     selector: 'app-screenshot-card',
@@ -24,6 +25,6 @@ export class ScreenshotCardComponent {
     }
 
     public onScreenshotDownload(): void {
-        this.onDownload.emit({ data: this.screenshot.data, filename: `${this.screenshot.title}.${this.screenshot.format}` });
+        this.onDownload.emit(ScreenshotsEffects.createDownloadScreenshotDto(this.screenshot));
     }
 }

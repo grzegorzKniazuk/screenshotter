@@ -15,7 +15,7 @@ import { AppState } from 'src/app/store/index';
 import { Screenshot, Settings } from 'src/app/interfaces';
 import { StorageService, TabsService } from 'src/app/services';
 import { SCREENSHOTS_STORAGE_KEY } from 'src/app/constants';
-import { selectScreenshots, selectSettingsState } from 'src/app/store/selectors';
+import { selectAutoDownloadState, selectScreenshots, selectSettingsState } from 'src/app/store/selectors';
 import { FileFormat } from 'src/app/enums';
 import { DownloadsService } from 'src/app/services/downloads.service';
 import { DownloadScreenshotDto } from 'src/app/dto';
@@ -24,6 +24,15 @@ import { TimeService } from 'src/app/services/time.service';
 
 @Injectable()
 export class ScreenshotsEffects implements OnInitEffects {
+
+    constructor(
+        private readonly actions$: Actions,
+        private readonly store: Store<AppState>,
+        private readonly storageService: StorageService,
+        private readonly tabsService: TabsService,
+        private readonly downloadsService: DownloadsService,
+    ) {
+    }
 
     public readonly init$ = createEffect(() => {
         return this.actions$.pipe(
@@ -51,7 +60,7 @@ export class ScreenshotsEffects implements OnInitEffects {
                             screenshot: {
                                 id: uuid(),
                                 data: dataUrl,
-                                time: this.timeService.byFormat('DD-MM-YYYY kk:mm'),
+                                time: TimeService.byFormat('DD-MM-YYYY kk:mm'),
                                 title,
                                 url,
                                 size: this.dataUrlToBytes(dataUrl),
@@ -67,7 +76,22 @@ export class ScreenshotsEffects implements OnInitEffects {
 
     public readonly onAddScreenshot$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(ADD_SCREENSHOT, DELETE_SCREENSHOT),
+            ofType(ADD_SCREENSHOT),
+            StorageService.browserStorageApiAvailability(),
+            withLatestFrom(this.store.pipe(select(selectAutoDownloadState))),
+            tap(([ { screenshot }, autoDownloadState ]: [ { screenshot: Screenshot, action: Action }, boolean ]) => {
+                if (autoDownloadState) {
+                    this.store.dispatch(DOWNLOAD_SCREENSHOT(ScreenshotsEffects.createDownloadScreenshotDto(screenshot)));
+                }
+            }),
+            switchMap(() => this.store.pipe(select(selectScreenshots))),
+            tap((screenshots: Screenshot[]) => this.storageService.set({ [SCREENSHOTS_STORAGE_KEY]: screenshots })),
+        );
+    }, { dispatch: false });
+
+    public readonly onDeleteScreenshot$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(DELETE_SCREENSHOT),
             StorageService.browserStorageApiAvailability(),
             switchMap(() => this.store.pipe(select(selectScreenshots))),
             tap((screenshots: Screenshot[]) => this.storageService.set({ [SCREENSHOTS_STORAGE_KEY]: screenshots })),
@@ -93,14 +117,8 @@ export class ScreenshotsEffects implements OnInitEffects {
         );
     }, { dispatch: false });
 
-    constructor(
-        private readonly actions$: Actions,
-        private readonly store: Store<AppState>,
-        private readonly storageService: StorageService,
-        private readonly tabsService: TabsService,
-        private readonly downloadsService: DownloadsService,
-        private readonly timeService: TimeService
-    ) {
+    public static createDownloadScreenshotDto(screenshot: Screenshot): DownloadScreenshotDto {
+        return ({ data: screenshot.data, filename: `${screenshot.title}.${screenshot.format}` });
     }
 
     ngrxOnInitEffects(): Action {

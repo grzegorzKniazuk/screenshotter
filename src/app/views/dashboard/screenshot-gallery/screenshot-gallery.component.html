@@ -1,8 +1,8 @@
-<app-search-bar></app-search-bar>
-<div [class.more-than-one]="(totalImages$ | async) > 1"
-     [class.no-images]="!(totalImages$ | async)" class="content-container">
-    <ng-container *ngIf="totalImages$ | async; else noImages">
-        <div *ngFor="let image of (images$ | async)" class="screenshot">
+<app-search-bar (onSearch)="onSearch($event)"></app-search-bar>
+<div [class.more-than-one]="(images$ | async).length > 1"
+     [class.no-images]="!(images$ | async).length" class="content-container">
+    <ng-container *ngIf="(images$ | async).length; else noImages">
+        <div *ngFor="let image of (images$ | async | screenshotFilter: (searchQuery$ | async))" class="screenshot">
             <app-screenshot-card (onDelete)="onDelete($event)" (onDownload)="onDownload($event)" (onOpen)="onOpen($event)" [screenshot]="image"></app-screenshot-card>
         </div>
     </ng-container>

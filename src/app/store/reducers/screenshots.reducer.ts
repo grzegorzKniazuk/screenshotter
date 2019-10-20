@@ -2,12 +2,20 @@ import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { Screenshot } from 'src/app/interfaces/screenshot';
 import { Action, createReducer, on } from '@ngrx/store';
 import { ADD_SCREENSHOT, ADD_SCREENSHOTS, DELETE_SCREENSHOT } from 'src/app/store/actions';
+import { TimeService } from 'src/app/services/time.service';
 
 export interface ScreenshotsState extends EntityState<Screenshot> {
 }
 
 const screenshotAdapter = createEntityAdapter<Screenshot>({
     selectId: (screenshot: Screenshot) => screenshot.id,
+    sortComparer: (a: Screenshot, b: Screenshot) => {
+        if (TimeService.isAfter(a.time, b.time)) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
 });
 
 const initialScreenshotsState = screenshotAdapter.getInitialState();

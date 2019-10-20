@@ -25,6 +25,8 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div class="form-panel-content">
+                    <label id="auto-download-label">Automatically download new screenshots</label>
+                    <mat-slide-toggle aria-labelledby="uto-download-label" formControlName="autoDownload">{{ autoDownloadControl.value ? 'Yes' : 'No' }}</mat-slide-toggle>
                     <label id="conflict-action-group-label">Action to take if filename already exists</label>
                     <mat-radio-group aria-labelledby="conflict-action-group-label" formControlName="conflictAction">
                         <mat-radio-button *ngFor="let conflictAction of conflictActions" [value]="conflictAction">{{ conflictAction }}</mat-radio-button>

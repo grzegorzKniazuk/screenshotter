@@ -8,6 +8,7 @@ export interface SettingsState extends Settings {
 }
 
 const initialSettingsState: SettingsState = {
+    autoDownload: false,
     fileFormat: FileFormat.JPEG,
     fileQuality: 100,
     conflictAction: ConflictAction.UNIQUIFY,
