@@ -1,11 +1,14 @@
-<nav mat-tab-nav-bar mat-align-tabs="center">
-    <a mat-tab-link routerLink="/new-screenshot" routerLinkActive #newScreenshotLinkActive="routerLinkActive" [routerLinkActiveOptions]="{ exact: true }" [active]="newScreenshotLinkActive.isActive">
-        <app-icon size="1.5">add_a_photo</app-icon><span class="tab-link-title">New screenshot</span>
+<nav mat-align-tabs="center" mat-tab-nav-bar>
+    <a #newScreenshotLinkActive="routerLinkActive" [active]="newScreenshotLinkActive.isActive" [routerLinkActiveOptions]="{ exact: true }" mat-tab-link routerLink="/new-screenshot" routerLinkActive>
+        <app-icon size="1.5">add_a_photo</app-icon>
+        <span class="tab-link-title">New screenshot</span>
     </a>
-    <a mat-tab-link routerLink="/gallery" routerLinkActive #galleryLinkActive="routerLinkActive" [routerLinkActiveOptions]="{ exact: true }" [active]="galleryLinkActive.isActive">
-        <app-icon size="1.5">photo</app-icon><span class="tab-link-title">Gallery</span>
+    <a #galleryLinkActive="routerLinkActive" [active]="galleryLinkActive.isActive" [routerLinkActiveOptions]="{ exact: true }" mat-tab-link routerLink="/gallery" routerLinkActive>
+        <app-icon size="1.5">photo</app-icon>
+        <span class="tab-link-title">Gallery</span>
     </a>
-    <a mat-tab-link routerLink="/settings" routerLinkActive #settingsLinkActive="routerLinkActive" [routerLinkActiveOptions]="{ exact: true }" [active]="settingsLinkActive.isActive">
-        <app-icon size="1.5">settings_applications</app-icon><span class="tab-link-title">Settings</span>
+    <a #settingsLinkActive="routerLinkActive" [active]="settingsLinkActive.isActive" [routerLinkActiveOptions]="{ exact: true }" mat-tab-link routerLink="/settings" routerLinkActive>
+        <app-icon size="1.5">settings_applications</app-icon>
+        <span class="tab-link-title">Settings</span>
     </a>
 </nav>

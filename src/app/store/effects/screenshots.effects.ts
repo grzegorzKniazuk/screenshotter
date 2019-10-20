@@ -13,13 +13,13 @@ import { switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 import { AppState } from 'src/app/store/index';
 import { Screenshot, Settings } from 'src/app/interfaces';
-import Tab = chrome.tabs.Tab;
 import { StorageService, TabsService } from 'src/app/services';
 import { SCREENSHOTS_STORAGE_KEY } from 'src/app/constants';
 import { selectScreenshots, selectSettingsState } from 'src/app/store/selectors';
 import { FileFormat } from 'src/app/enums';
 import { DownloadsService } from 'src/app/services/downloads.service';
 import { DownloadScreenshotDto } from 'src/app/dto';
+import Tab = chrome.tabs.Tab;
 
 @Injectable()
 export class ScreenshotsEffects implements OnInitEffects {

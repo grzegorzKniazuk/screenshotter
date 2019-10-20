@@ -1,9 +1,8 @@
-<div class="content-container"
-     [class.more-than-one]="(totalImages$ | async) > 1"
-     [class.no-images]="!(totalImages$ | async)">
+<div [class.more-than-one]="(totalImages$ | async) > 1"
+     [class.no-images]="!(totalImages$ | async)" class="content-container">
     <ng-container *ngIf="totalImages$ | async; else noImages">
-        <div class="screenshot" *ngFor="let image of (images$ | async)">
-            <app-screenshot-card [screenshot]="image" (onDelete)="onDelete($event)" (onOpen)="onOpen($event)" (onDownload)="onDownload($event)"></app-screenshot-card>
+        <div *ngFor="let image of (images$ | async)" class="screenshot">
+            <app-screenshot-card (onDelete)="onDelete($event)" (onDownload)="onDownload($event)" (onOpen)="onOpen($event)" [screenshot]="image"></app-screenshot-card>
         </div>
     </ng-container>
 </div>

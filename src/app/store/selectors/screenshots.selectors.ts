@@ -10,5 +10,5 @@ export const selectScreenshots = createSelector(
 
 export const selectTotalScreenshots = createSelector(
     selectScreenshotsState,
-    selectTotal
+    selectTotal,
 );

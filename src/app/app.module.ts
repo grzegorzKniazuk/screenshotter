@@ -31,7 +31,7 @@ const components: any[] = [
 ];
 
 const pipes: any[] = [
-    BytesToPipe
+    BytesToPipe,
 ];
 
 const directives: any[] = [

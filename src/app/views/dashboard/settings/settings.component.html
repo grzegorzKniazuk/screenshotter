@@ -12,8 +12,10 @@
                     <mat-radio-group aria-labelledby="file-type-group-label" formControlName="fileFormat">
                         <mat-radio-button *ngFor="let fileFormat of fileFormats" [value]="fileFormat">{{ fileFormat }}</mat-radio-button>
                     </mat-radio-group>
-                    <label id="file-quality-label">Screenshot quality<mat-hint>(only jpeg)</mat-hint></label>
-                    <mat-slider aria-labelledby="file-quality-label" thumbLabel min="1" step="1" max="100" formControlName="fileQuality"></mat-slider>
+                    <label id="file-quality-label">Screenshot quality
+                        <mat-hint>(only jpeg)</mat-hint>
+                    </label>
+                    <mat-slider aria-labelledby="file-quality-label" formControlName="fileQuality" max="100" min="1" step="1" thumbLabel></mat-slider>
                 </div>
             </mat-expansion-panel>
             <mat-expansion-panel [expanded]="true">
@@ -31,7 +33,7 @@
                     <mat-slide-toggle aria-labelledby="save-as-label" formControlName="alwaysShowSaveAs">{{ alwaysShowSaveAsControl.value ? 'Yes' : 'No' }}</mat-slide-toggle>
                 </div>
                 <mat-action-row>
-                    <button mat-raised-button color="primary" (click)="openDownloadFolder()">Open download folder</button>
+                    <button (click)="openDownloadFolder()" color="primary" mat-raised-button>Open download folder</button>
                 </mat-action-row>
             </mat-expansion-panel>
         </mat-accordion>
