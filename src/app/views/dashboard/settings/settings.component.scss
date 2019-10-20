@@ -9,6 +9,11 @@ div.content-container {
         mat-accordion.mat-accordion {
             mat-expansion-panel.mat-expansion-panel {
                 width: 46rem;
+
+                mat-action-row.mat-action-row {
+                    display: flex;
+                    justify-content: flex-start;
+                }
             }
         }
     }

@@ -30,6 +30,9 @@
                     <label id="save-as-label">Use a file-chooser to select a filename regardless of whether filename is set or already exists</label>
                     <mat-slide-toggle aria-labelledby="save-as-label" formControlName="alwaysShowSaveAs">{{ alwaysShowSaveAsControl.value ? 'Yes' : 'No' }}</mat-slide-toggle>
                 </div>
+                <mat-action-row>
+                    <button mat-raised-button color="primary" (click)="openDownloadFolder()">Open download folder</button>
+                </mat-action-row>
             </mat-expansion-panel>
         </mat-accordion>
     </form>

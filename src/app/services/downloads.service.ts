@@ -15,4 +15,8 @@ export class DownloadsService extends ApiService {
     public download(options: DownloadOptions, callback?: (downloadId: number) => void): void {
         this.chrome.downloads.download(options, callback);
     }
+
+    public showDefaultFolder(): void {
+        chrome.downloads.showDefaultFolder();
+    }
 }

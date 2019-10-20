@@ -6,7 +6,7 @@ import { tap, throttleTime } from 'rxjs/operators';
 import { Settings } from 'src/app/interfaces';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store';
-import { UPDATE_SETTINGS } from 'src/app/store/actions';
+import { OPEN_DOWNLOAD_FOLDER, UPDATE_SETTINGS } from 'src/app/store/actions';
 import { ActivatedRoute } from '@angular/router';
 import { SETTINGS_STORAGE_KEY } from 'src/app/constants';
 
@@ -73,5 +73,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     public get alwaysShowSaveAsControl(): AbstractControl {
         return this.settingsForm.get('alwaysShowSaveAs');
+    }
+
+    public openDownloadFolder(): void {
+        this.store.dispatch(OPEN_DOWNLOAD_FOLDER());
     }
 }

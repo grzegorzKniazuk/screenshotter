@@ -17,29 +17,51 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BytesToPipe } from 'src/app/pipes';
+import { LazyLoadImageDirective } from 'src/app/directives';
+
+const components: any[] = [
+    AppComponent,
+    DashboardComponent,
+    ScreenshotGalleryComponent,
+    SettingsComponent,
+    DashboardNavComponent,
+    NewScreenshotComponent,
+    IconComponent,
+    ScreenshotCardComponent,
+];
+
+const pipes: any[] = [
+    BytesToPipe
+];
+
+const directives: any[] = [
+    LazyLoadImageDirective,
+];
+
+const modules: any[] = [
+    BrowserModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
+];
+
+const store: any[] = [
+    StoreModule.forRoot(appReducers, { runtimeChecks: RUNTIME_CHECKS }),
+    StoreRouterConnectingModule.forRoot(STORE_ROUTER_CONNECTING_CONFIG),
+    EffectsModule.forRoot([ ScreenshotsEffects, SettingsEffects ]),
+    environment.production ? [] : [ StoreDevtoolsModule.instrument() ],
+];
 
 @NgModule({
     declarations: [
-        AppComponent,
-        DashboardComponent,
-        ScreenshotGalleryComponent,
-        SettingsComponent,
-        DashboardNavComponent,
-        NewScreenshotComponent,
-        IconComponent,
-        ScreenshotCardComponent,
-        BytesToPipe,
+        ...components,
+        ...pipes,
+        ...directives,
     ],
     imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        MaterialModule,
-        ReactiveFormsModule,
-        AppRoutingModule,
-        StoreModule.forRoot(appReducers, { runtimeChecks: RUNTIME_CHECKS }),
-        StoreRouterConnectingModule.forRoot(STORE_ROUTER_CONNECTING_CONFIG),
-        EffectsModule.forRoot([ ScreenshotsEffects, SettingsEffects ]),
-        environment.production ? [] : [ StoreDevtoolsModule.instrument() ],
+        ...modules,
+        ...store,
     ],
     bootstrap: [ AppComponent ],
 })

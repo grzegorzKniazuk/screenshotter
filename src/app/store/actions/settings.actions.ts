@@ -5,3 +5,7 @@ export const UPDATE_SETTINGS = createAction(
     '[settings] update settings',
     props<{ settings: Settings }>(),
 );
+
+export const OPEN_DOWNLOAD_FOLDER = createAction(
+    `[settings] open download folder`,
+);
