@@ -1,3 +1,4 @@
+<app-search-bar></app-search-bar>
 <div [class.more-than-one]="(totalImages$ | async) > 1"
      [class.no-images]="!(totalImages$ | async)" class="content-container">
     <ng-container *ngIf="totalImages$ | async; else noImages">

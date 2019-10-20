@@ -1,0 +1,18 @@
+<form [formGroup]="searchForm">
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>sort</mat-icon>
+    </button>
+    <button mat-icon-button (click)="setSearchOrder()">
+        <mat-icon>{{ searchOrder === 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+    </button>
+    <mat-form-field>
+        <mat-label>Search query</mat-label>
+        <label class="cdk-visually-hidden" for="search-input">Enter search query</label>
+        <input id="search-input" type="search" matInput formControlName="query" spellcheck="false" >
+        <mat-icon matPrefix class="input-action-icon help-text">search</mat-icon>
+    </mat-form-field>
+</form>
+
+<mat-menu #menu="matMenu">
+    <button mat-menu-item *ngFor="let orderBy of orderByOptions" (click)="setOrderBy(orderBy)">{{ orderBy | titlecase }}</button>
+</mat-menu>

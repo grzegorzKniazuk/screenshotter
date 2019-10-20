@@ -20,6 +20,7 @@ import { FileFormat } from 'src/app/enums';
 import { DownloadsService } from 'src/app/services/downloads.service';
 import { DownloadScreenshotDto } from 'src/app/dto';
 import Tab = chrome.tabs.Tab;
+import { TimeService } from 'src/app/services/time.service';
 
 @Injectable()
 export class ScreenshotsEffects implements OnInitEffects {
@@ -50,7 +51,7 @@ export class ScreenshotsEffects implements OnInitEffects {
                             screenshot: {
                                 id: uuid(),
                                 data: dataUrl,
-                                time: '',
+                                time: this.timeService.byFormat('DD-MM-YYYY kk:mm'),
                                 title,
                                 url,
                                 size: this.dataUrlToBytes(dataUrl),
@@ -98,6 +99,7 @@ export class ScreenshotsEffects implements OnInitEffects {
         private readonly storageService: StorageService,
         private readonly tabsService: TabsService,
         private readonly downloadsService: DownloadsService,
+        private readonly timeService: TimeService
     ) {
     }
 

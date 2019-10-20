@@ -1,0 +1,25 @@
+form {
+    width: 100%;
+    padding: .25rem 1rem 0;
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, .87);;
+
+    button {
+        &:last-of-type {
+            margin-right: 1rem;
+        }
+    }
+
+    mat-form-field.mat-form-field {
+        width: 20rem;
+
+        mat-icon {
+            margin-right: .5rem;
+        }
+    }
+}

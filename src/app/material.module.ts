@@ -7,7 +7,7 @@ import {
     MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule,
+    MatInputModule, MatMenuModule,
     MatRadioModule,
     MatSliderModule,
     MatSlideToggleModule,
@@ -29,6 +29,7 @@ const modules: any[] = [
     MatExpansionModule,
     MatInputModule,
     MatSlideToggleModule,
+    MatMenuModule,
 ];
 
 @NgModule({
