@@ -66,18 +66,10 @@ export class ScreenshotsEffects implements OnInitEffects {
 
     public readonly onAddScreenshot$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(ADD_SCREENSHOT),
+            ofType(ADD_SCREENSHOT, DELETE_SCREENSHOT),
             StorageService.browserStorageApiAvailability(),
             switchMap(() => this.store.pipe(select(selectScreenshots))),
             tap((screenshots: Screenshot[]) => this.storageService.set({ [SCREENSHOTS_STORAGE_KEY]: screenshots })),
-        );
-    }, { dispatch: false });
-
-    public readonly onDeleteScreenshot$ = createEffect(() => {
-        return this.actions$.pipe(
-            ofType(DELETE_SCREENSHOT),
-            StorageService.browserStorageApiAvailability(),
-            tap(({ id }: { id: string }) => this.storageService.remove(id)),
         );
     }, { dispatch: false });
 
