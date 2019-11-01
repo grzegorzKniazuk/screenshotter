@@ -1,27 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, createEffect, ofType, OnInitEffects, ROOT_EFFECTS_INIT } from '@ngrx/effects';
-import { OPEN_DOWNLOAD_FOLDER, UPDATE_SETTINGS } from 'src/app/store/actions';
-import { StorageService } from 'src/app/services';
+import { LOAD_SETTINGS, OPEN_DOWNLOAD_FOLDER, UPDATE_SETTINGS } from 'src/app/store/actions';
+import { DownloadsService, StorageService, ToastService } from 'src/app/services';
 import { tap } from 'rxjs/operators';
 import { SETTINGS_STORAGE_KEY } from 'src/app/constants';
 import { AppState } from 'src/app/store/index';
-import { DownloadsService } from 'src/app/services/downloads.service';
+import { Bind } from 'lodash-decorators';
+import { BaseEffects } from 'src/app/store/effects/base.effects';
+import { Settings } from 'src/app/interfaces';
 
 @Injectable({
     providedIn: 'root',
 })
-export class SettingsEffects implements OnInitEffects {
+export class SettingsEffects extends BaseEffects implements OnInitEffects {
 
     public init$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(ROOT_EFFECTS_INIT),
             StorageService.browserStorageApiAvailability(),
-            tap(() => {
-                this.storageService.get(SETTINGS_STORAGE_KEY, (items) => {
-                    this.store.dispatch(UPDATE_SETTINGS({ settings: { ...items[SETTINGS_STORAGE_KEY] } }));
-                });
-            }),
+            tap(this.loadExtensionSettings),
+            tap(this.updateBytesInUse),
         );
     }, { dispatch: false });
 
@@ -29,7 +28,8 @@ export class SettingsEffects implements OnInitEffects {
         return this.actions$.pipe(
             ofType(UPDATE_SETTINGS),
             StorageService.browserStorageApiAvailability(),
-            tap(({ settings }) => this.storageService.set({ [SETTINGS_STORAGE_KEY]: settings })),
+            tap(this.updateExtensionSettings),
+            tap(this.notifyUpdateSettings),
         );
     }, { dispatch: false });
 
@@ -42,14 +42,33 @@ export class SettingsEffects implements OnInitEffects {
     }, { dispatch: false });
 
     constructor(
-        private readonly storageService: StorageService,
+        storageService: StorageService,
         private readonly actions$: Actions,
-        private readonly store: Store<AppState>,
+        store: Store<AppState>,
         private readonly downloadsService: DownloadsService,
+        private readonly toastService: ToastService,
     ) {
+        super(store, storageService);
     }
 
     ngrxOnInitEffects(): Action {
         return { type: ROOT_EFFECTS_INIT };
+    }
+
+    @Bind
+    private notifyUpdateSettings(): void {
+        this.toastService.success('Settings have been saved');
+    }
+
+    @Bind
+    private loadExtensionSettings(): void {
+        this.storageService.get(SETTINGS_STORAGE_KEY, (items) => {
+            this.store.dispatch(LOAD_SETTINGS({ settings: { ...items[SETTINGS_STORAGE_KEY] } }));
+        });
+    }
+
+    @Bind
+    private updateExtensionSettings({ settings }: { settings: Settings }): void {
+        this.storageService.set({ [SETTINGS_STORAGE_KEY]: settings });
     }
 }

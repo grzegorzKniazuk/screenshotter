@@ -12,7 +12,7 @@ export const ADD_SCREENSHOT = createAction(
 );
 
 export const ADD_SCREENSHOTS = createAction(
-    '[screenshots effects] add screenshots',
+    '[screenshot effects] add screenshots',
     props<{ screenshots: Screenshot[] }>(),
 );
 
@@ -29,4 +29,16 @@ export const DOWNLOAD_SCREENSHOT = createAction(
 export const OPEN_SOURCE = createAction(
     '[screenshot card] open source',
     props<{ url: string }>(),
+);
+
+export const INCREASE_NEW_SCREENSHOT_COUNT = createAction(
+    '[screenshot effects] increase new screenshot count',
+);
+
+export const RESET_NEW_SCREENSHOT_COUNT = createAction(
+    '[screenshot gallery] reset new screenshot count',
+);
+
+export const CLEAR_SCREENSHOTS_STORAGE = createAction(
+    '[settings] clear screenshots storage',
 );

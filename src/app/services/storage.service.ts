@@ -22,4 +22,12 @@ export class StorageService extends ApiService {
     public remove(keys: string | string[], callback?: () => void): void {
         this.chrome.storage.local.remove(keys, callback);
     }
+
+    public clear(callback?: () => void): void {
+        this.chrome.storage.local.clear(callback);
+    }
+
+    public getBytesInUse(callback: (bytesInUse: number) => void): void {
+        this.chrome.storage.local.getBytesInUse(callback);
+    }
 }

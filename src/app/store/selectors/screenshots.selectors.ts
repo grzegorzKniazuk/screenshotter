@@ -7,3 +7,8 @@ export const selectScreenshots = createSelector(
     selectScreenshotsState,
     selectAll,
 );
+
+export const selectNewScreenshotCounter = createSelector(
+    selectScreenshotsState,
+    (state) => state.newScreenshotCount,
+);

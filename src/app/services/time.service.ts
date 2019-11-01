@@ -13,4 +13,8 @@ export class TimeService {
     public static isAfter(data: string, compareTo: string, granularity?: unitOfTime.StartOf): boolean {
         return moment(data).isAfter(compareTo, granularity);
     }
+
+    public static isSame(data: string, compareTo: string, granularity?: unitOfTime.StartOf): boolean {
+        return moment(data).isSame(compareTo, granularity);
+    }
 }

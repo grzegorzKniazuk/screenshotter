@@ -9,7 +9,7 @@
       "16": "assets/browser-16.png",
       "32": "assets/browser-32.png"
     },
-    "default_title": "Make the screenshot",
+    "default_title": "Click to open application",
     "default_popup": "index.html"
   },
   "permissions": [

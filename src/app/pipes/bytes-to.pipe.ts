@@ -22,5 +22,4 @@ export class BytesToPipe implements PipeTransform {
             }
         }
     }
-
 }

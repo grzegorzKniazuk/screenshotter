@@ -1,10 +1,10 @@
 import { Settings } from 'src/app/interfaces';
 import { ConflictAction, FileFormat } from 'src/app/enums';
 import { Action, createReducer, on } from '@ngrx/store';
-import { UPDATE_SETTINGS } from 'src/app/store/actions';
+import { LOAD_SETTINGS, UPDATE_BYTES_IN_USE, UPDATE_SETTINGS } from 'src/app/store/actions';
 
-// tslint:disable-next-line:no-empty-interface
 export interface SettingsState extends Settings {
+    bytesInUse: number;
 }
 
 const initialSettingsState: SettingsState = {
@@ -13,16 +13,23 @@ const initialSettingsState: SettingsState = {
     fileQuality: 100,
     conflictAction: ConflictAction.UNIQUIFY,
     alwaysShowSaveAs: false,
+    bytesInUse: null,
 };
 
 const reducer = createReducer(
     initialSettingsState,
-    on(UPDATE_SETTINGS, (state, { settings }) => {
+    on(UPDATE_SETTINGS, LOAD_SETTINGS, (state, { settings }) => {
         return {
             ...state,
             ...settings,
         };
     }),
+    on(UPDATE_BYTES_IN_USE, (state, { bytesInUse }) => {
+        return {
+            ...state,
+            bytesInUse,
+        };
+    })
 );
 
 export function settingsReducer(state: SettingsState, action: Action): SettingsState {

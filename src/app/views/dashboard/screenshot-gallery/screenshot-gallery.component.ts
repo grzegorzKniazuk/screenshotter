@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { AppState } from 'src/app/store';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Screenshot } from 'src/app/interfaces/screenshot';
-import { selectScreenshots } from 'src/app/store/selectors';
-import { DELETE_SCREENSHOT, DOWNLOAD_SCREENSHOT, OPEN_SOURCE } from 'src/app/store/actions';
+import { DELETE_SCREENSHOT, DOWNLOAD_SCREENSHOT, OPEN_SOURCE, RESET_NEW_SCREENSHOT_COUNT } from 'src/app/store/actions';
 import { DownloadScreenshotDto } from 'src/app/dto';
+import { ToastService } from 'src/app/services';
+import { selectScreenshots } from 'src/app/store/selectors';
 
 @Component({
     selector: 'app-screenshot-gallery',
@@ -13,18 +14,24 @@ import { DownloadScreenshotDto } from 'src/app/dto';
     styleUrls: [ './screenshot-gallery.component.scss', '../dashboard.component.scss' ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScreenshotGalleryComponent {
+export class ScreenshotGalleryComponent implements OnInit {
 
     public readonly images$: Observable<Screenshot[]> = this.store.pipe(select(selectScreenshots));
-    public readonly searchQuery$ = new Subject<string>();
 
     constructor(
         private readonly store: Store<AppState>,
+        private readonly toastService: ToastService,
     ) {
     }
 
+    ngOnInit() {
+        this.store.dispatch(RESET_NEW_SCREENSHOT_COUNT());
+    }
+
     public onDelete(id: string): void {
-        this.store.dispatch(DELETE_SCREENSHOT({ id }));
+        this.toastService.question('Are You sure want to delete this screenshot?').subscribe(() => {
+            this.store.dispatch(DELETE_SCREENSHOT({ id }));
+        });
     }
 
     public onOpen(url: string): void {
@@ -33,9 +40,5 @@ export class ScreenshotGalleryComponent {
 
     public onDownload({ data, filename }: DownloadScreenshotDto): void {
         this.store.dispatch(DOWNLOAD_SCREENSHOT({ data, filename }));
-    }
-
-    public onSearch(query: string): void {
-        this.searchQuery$.next(query);
     }
 }

@@ -38,6 +38,20 @@
                     <button (click)="openDownloadFolder()" color="primary" mat-raised-button>Open download folder</button>
                 </mat-action-row>
             </mat-expansion-panel>
+            <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Storage options
+                    </mat-panel-title>
+                    <mat-panel-description>Usage: {{ bytesInUse$ | async | bytesTo:'mb' | number:'0.2-2' }} MB</mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="form-panel-content">
+
+                </div>
+                <mat-action-row>
+                    <button (click)="clearStorage()" color="warn" mat-raised-button>Clear storage</button>
+                </mat-action-row>
+            </mat-expansion-panel>
         </mat-accordion>
     </form>
 </div>

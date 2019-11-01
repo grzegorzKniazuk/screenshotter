@@ -5,7 +5,7 @@
     </a>
     <a #galleryLinkActive="routerLinkActive" [active]="galleryLinkActive.isActive" [routerLinkActiveOptions]="{ exact: true }" mat-tab-link routerLink="/gallery" routerLinkActive>
         <app-icon size="1.5">photo</app-icon>
-        <span class="tab-link-title">Gallery</span>
+        <span class="tab-link-title" matBadge="{{ (newScreenshotCounter$ | async) }}" [matBadgeHidden]="!(newScreenshotCounter$ | async)" [matBadgePosition]="'above after'">Gallery</span>
     </a>
     <a #settingsLinkActive="routerLinkActive" [active]="settingsLinkActive.isActive" [routerLinkActiveOptions]="{ exact: true }" mat-tab-link routerLink="/settings" routerLinkActive>
         <app-icon size="1.5">settings_applications</app-icon>

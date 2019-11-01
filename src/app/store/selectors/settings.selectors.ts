@@ -5,5 +5,10 @@ export const selectSettingsState = createFeatureSelector<SettingsState>('setting
 
 export const selectAutoDownloadState = createSelector(
     selectSettingsState,
-    (state: SettingsState) => state.autoDownload,
+    (state) => state.autoDownload,
+);
+
+export const selectBytesInUse = createSelector(
+    selectSettingsState,
+    (state) => state.bytesInUse,
 );
