@@ -1,4 +1,3 @@
-import {} from 'chrome';
 import { Observable, Subscriber, Subscription } from 'rxjs';
 
 export abstract class ApiService {

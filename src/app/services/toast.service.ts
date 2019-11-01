@@ -17,13 +17,6 @@ export class ToastService {
         customContainerClass: 'toast-container',
     };
 
-    private open(settings: SweetAlertOptions): Promise<SweetAlertResult> {
-        return swal.fire({
-            ...this.baseToastSettings,
-            ...settings,
-        });
-    }
-
     public error(text: string, onAfterClose?: () => void): Promise<SweetAlertResult> {
         return this.open({
             titleText: text,
@@ -59,5 +52,12 @@ export class ToastService {
             pluck('value'),
             filter(Boolean),
         );
+    }
+
+    private open(settings: SweetAlertOptions): Promise<SweetAlertResult> {
+        return swal.fire({
+            ...this.baseToastSettings,
+            ...settings,
+        });
     }
 }

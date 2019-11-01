@@ -29,7 +29,7 @@ const reducer = createReducer(
             ...state,
             bytesInUse,
         };
-    })
+    }),
 );
 
 export function settingsReducer(state: SettingsState, action: Action): SettingsState {

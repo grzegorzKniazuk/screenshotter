@@ -24,9 +24,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
     public readonly fileFormats = [ FileFormat.JPEG, FileFormat.PNG ];
     public readonly conflictActions = [ ConflictAction.UNIQUIFY, ConflictAction.OVERWRITE, ConflictAction.PROMPT ];
     public settingsForm: FormGroup;
+    public readonly bytesInUse$: Observable<number> = this.store.pipe(select(selectBytesInUse));
     private readonly subscriptions$: Subscription = new Subscription();
     private readonly settings: Settings = this.activatedRoute.snapshot.data[SETTINGS_STORAGE_KEY];
-    public readonly bytesInUse$: Observable<number> = this.store.pipe(select(selectBytesInUse));
 
     constructor(
         private readonly formBuilder: FormBuilder,

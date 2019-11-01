@@ -11,11 +11,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { appReducers } from 'src/app/store';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { DashboardComponent, NewScreenshotComponent, ScreenshotGalleryComponent, SettingsComponent } from 'src/app/views';
-import {
-    DashboardNavComponent,
-    IconComponent,
-    ScreenshotCardComponent,
-} from 'src/app/components';
+import { DashboardNavComponent, IconComponent, ScreenshotCardComponent } from 'src/app/components';
 import { ScreenshotsEffects, SettingsEffects } from 'src/app/store/effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from 'src/app/material.module';
@@ -23,8 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BytesToPipe } from 'src/app/pipes';
 import { LazyLoadImageDirective } from 'src/app/directives';
 
-const entryComponents: any[] = [
-];
+const entryComponents: any[] = [];
 
 const components: any[] = [
     ...entryComponents,

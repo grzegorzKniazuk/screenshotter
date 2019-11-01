@@ -44,7 +44,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
             ofType(MAKE_SCREENSHOT),
             TabsService.browserTabsApiAvailability(),
             withLatestFrom(this.store.pipe(select(selectSettingsState))),
-            tap(([ , { fileFormat, fileQuality }]: [ Action, Settings ]) => {
+            tap(([ , { fileFormat, fileQuality } ]: [ Action, Settings ]) => {
                 this.tabsService.query(({ active: true }), (tabs: Tab[]) => {
                     const { title, url } = tabs.find((tab: Tab) => tab.active);
 
@@ -142,6 +142,10 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
         return { type: ROOT_EFFECTS_INIT };
     }
 
+    @Bind notifySuccessfulClear(): void {
+        this.toastService.success('Screenshots have been removed');
+    }
+
     private dataUrlToBytes(dataUrl: string): number {
         return window.atob(dataUrl.split(',')[1]).length;
     }
@@ -174,10 +178,6 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
     @Bind
     private notifySuccessfulDelete(): void {
         this.toastService.success('Screenshot has been deleted');
-    }
-
-    @Bind notifySuccessfulClear(): void {
-        this.toastService.success('Screenshots have been removed');
     }
 
     @Bind
