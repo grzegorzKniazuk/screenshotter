@@ -77,6 +77,7 @@ function buildScreenshotData(dataUrl, title, url, fileFormat, fileQuality) {
         size: dataUrlToBytes(dataUrl),
         format: fileFormat,
         quality: fileFormat === 'jpeg' ? fileQuality : 100,
+        favorite: false,
     };
 }
 

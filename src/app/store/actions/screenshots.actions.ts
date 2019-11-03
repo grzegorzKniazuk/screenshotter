@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { Screenshot } from 'src/app/interfaces/screenshot';
 import { DownloadScreenshotDto } from 'src/app/dto';
+import { Update } from '@ngrx/entity';
 
 export const MAKE_SCREENSHOT = createAction(
     '[dashboard nav] make screenshot',
@@ -14,6 +15,11 @@ export const ADD_SCREENSHOT = createAction(
 export const ADD_SCREENSHOTS = createAction(
     '[screenshot effects] add screenshots',
     props<{ screenshots: Screenshot[] }>(),
+);
+
+export const UPDATE_SCREENSHOT = createAction(
+    '[screenshot card] update screenshot',
+    props<{ screenshot: Update<Screenshot>}>(),
 );
 
 export const DELETE_SCREENSHOT = createAction(
@@ -50,5 +56,5 @@ export const SET_NEW_SCREENSHOT_COUNT = createAction(
 
 export const PREVIEW_SCREENSHOT = createAction(
     `[screenshot card] preview screenshot`,
-    props<{ data: string }>()
+    props<{ data: string }>(),
 );

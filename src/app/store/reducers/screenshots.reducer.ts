@@ -8,7 +8,7 @@ import {
     DELETE_SCREENSHOT,
     INCREASE_NEW_SCREENSHOT_COUNT,
     RESET_NEW_SCREENSHOT_COUNT,
-    SET_NEW_SCREENSHOT_COUNT,
+    SET_NEW_SCREENSHOT_COUNT, UPDATE_SCREENSHOT,
 } from 'src/app/store/actions';
 import { TimeService } from 'src/app/services';
 
@@ -19,14 +19,22 @@ export interface ScreenshotsState extends EntityState<Screenshot> {
 const screenshotAdapter = createEntityAdapter<Screenshot>({
     selectId: (screenshot: Screenshot) => screenshot.id,
     sortComparer: (a: Screenshot, b: Screenshot) => {
+        if (b.favorite && !a.favorite) {
+            return 1;
+        }
+
+        if (a.favorite && !b.favorite) {
+            return -1;
+        }
+
         if (TimeService.isSame(a.time, b.time, 'minute')) {
             return 0;
+        }
+
+        if (TimeService.isAfter(a.time, b.time, 'minute')) {
+            return -1;
         } else {
-            if (TimeService.isAfter(a.time, b.time, 'minute')) {
-                return -1;
-            } else {
-                return 1;
-            }
+            return 1;
         }
     },
 });
@@ -42,6 +50,9 @@ const reducer = createReducer(
     }),
     on(ADD_SCREENSHOTS, (state, { screenshots }) => {
         return screenshotAdapter.addMany(screenshots, state);
+    }),
+    on(UPDATE_SCREENSHOT, (state, { screenshot }) => {
+        return screenshotAdapter.updateOne(screenshot, state);
     }),
     on(DELETE_SCREENSHOT, (state, { id }) => {
         return screenshotAdapter.removeOne(id, state);

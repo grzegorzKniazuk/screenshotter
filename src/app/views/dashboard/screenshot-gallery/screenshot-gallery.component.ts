@@ -3,10 +3,11 @@ import { select, Store } from '@ngrx/store';
 import { AppState } from 'src/app/store';
 import { Observable } from 'rxjs';
 import { Screenshot } from 'src/app/interfaces/screenshot';
-import { DELETE_SCREENSHOT, DOWNLOAD_SCREENSHOT, OPEN_SOURCE, PREVIEW_SCREENSHOT } from 'src/app/store/actions';
+import { DELETE_SCREENSHOT, DOWNLOAD_SCREENSHOT, OPEN_SOURCE, PREVIEW_SCREENSHOT, UPDATE_SCREENSHOT } from 'src/app/store/actions';
 import { DownloadScreenshotDto } from 'src/app/dto';
 import { ToastService } from 'src/app/services';
 import { selectScreenshots, selectScreenshotsByQuery } from 'src/app/store/selectors';
+import { Update } from '@ngrx/entity';
 
 @Component({
     selector: 'app-screenshot-gallery',
@@ -42,7 +43,19 @@ export class ScreenshotGalleryComponent {
         this.images$ = this.store.pipe(select(selectScreenshotsByQuery, { title: query }));
     }
 
-    public onPreview(data: { data: string }): void {
-        this.store.dispatch(PREVIEW_SCREENSHOT(data));
+    public onPreview(data: string): void {
+        this.store.dispatch(PREVIEW_SCREENSHOT({ data }));
+    }
+
+    public onUpdate(screenshotUpdateDto: Update<Screenshot>): void {
+        this.store.dispatch(UPDATE_SCREENSHOT({ screenshot: screenshotUpdateDto }));
+    }
+
+    public trackScreenshotById(index: number, item: Screenshot): string {
+        if (!index) {
+            return null;
+        } else {
+            return item.id;
+        }
     }
 }

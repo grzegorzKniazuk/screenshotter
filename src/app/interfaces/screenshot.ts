@@ -9,4 +9,5 @@ export interface Screenshot {
     quality: number;
     format: FileFormat;
     size: number;
+    favorite: boolean;
 }

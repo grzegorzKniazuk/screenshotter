@@ -48,9 +48,19 @@
         align-items: center;
     }
 
+    .favorite-icon {
+        position: absolute;
+        top: 1.5rem;
+        right: .5rem;
+    }
+
     &:hover {
         img {
             filter: blur(.2rem);
+        }
+
+        h2, .caption {
+            font-weight: 700;
         }
 
         .actions {

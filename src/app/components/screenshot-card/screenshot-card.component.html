@@ -8,10 +8,11 @@
         <mat-chip *ngIf="screenshot.quality" matTooltip="Screenshot quality">{{ screenshot.quality }}/100</mat-chip>
     </mat-chip-list>
     <div class="actions">
-        <app-icon size="4" [action]="true" matTooltip="Preview" (click)="onScreenshotPreview()">photo</app-icon>
-        <app-icon size="4" [action]="true" matTooltip="Download" (click)="onScreenshotDownload()">cloud_download</app-icon>
-        <app-icon size="4" [action]="true" [matTooltip]="screenshot.url" (click)="onOpenSource()">open_in_browser</app-icon>
-        <app-icon size="4" [action]="true" matTooltip="delete" (click)="onScreenshotDelete()">delete</app-icon>
+        <app-icon size="3.5" [action]="true" matTooltip="Add to favorite" (click)="onFavoriteChange()">{{ screenshot.favorite ? 'favorite' : 'favorite_border' }}r</app-icon>
+        <app-icon size="3.5" [action]="true" matTooltip="Preview" (click)="onScreenshotPreview()">photo</app-icon>
+        <app-icon size="3.5" [action]="true" matTooltip="Download" (click)="onScreenshotDownload()">cloud_download</app-icon>
+        <app-icon size="3.5" [action]="true" [matTooltip]="screenshot.url" (click)="onOpenSource()">open_in_browser</app-icon>
+        <app-icon size="3.5" [action]="true" matTooltip="delete" (click)="onScreenshotDelete()">delete</app-icon>
     </div>
-    <div class="overlay"></div>
+    <app-icon *ngIf="screenshot.favorite" size="2" class="favorite-icon" color="firebrick">favorite</app-icon>
 </div>

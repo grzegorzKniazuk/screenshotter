@@ -9,7 +9,6 @@
     cursor: pointer;
 
     &:hover {
-        color: $mat-primary !important;
         transition: color $base-animation-duration ease-in-out;
     }
 }

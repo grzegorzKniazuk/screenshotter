@@ -14,6 +14,7 @@ import {
     REMOVE_BADGE_TEXT,
     RESET_NEW_SCREENSHOT_COUNT,
     SET_BADGE_TEXT,
+    UPDATE_SCREENSHOT,
 } from 'src/app/store/actions';
 import { map, tap, withLatestFrom } from 'rxjs/operators';
 import { AppState } from 'src/app/store/index';
@@ -59,6 +60,17 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
             map(() => INCREASE_NEW_SCREENSHOT_COUNT()),
         );
     });
+
+    public readonly onUpdateScreenshot$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(UPDATE_SCREENSHOT),
+            StorageService.browserStorageApiAvailability(),
+            withLatestFrom(this.store.pipe(select(selectScreenshots))),
+            tap(this.updateLocalScreenshotsStorage),
+            tap(this.notifySuccessUpdate),
+            tap(this.updateBytesInUse),
+        );
+    }, { dispatch: false });
 
     public readonly onDeleteScreenshot$ = createEffect(() => {
         return this.actions$.pipe(
@@ -167,6 +179,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
                         size: this.dataUrlToBytes(dataUrl),
                         format: fileFormat,
                         quality: fileFormat === FileFormat.JPEG ? fileQuality : 100,
+                        favorite: false,
                     },
                 }));
             });
@@ -207,6 +220,11 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
     @Bind
     private notifySuccessSave(): void {
         this.toastService.success('Screenshot has been saved');
+    }
+
+    @Bind
+    private notifySuccessUpdate(): void {
+        this.toastService.success('Screenshot has been updated');
     }
 
     @Bind
