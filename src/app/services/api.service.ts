@@ -22,4 +22,9 @@ export abstract class ApiService {
             });
         };
     }
+
+    protected browserApiAvailability(apiName: string): boolean {
+        // @ts-ignore
+        return this.chrome && this.chrome[apiName];
+    }
 }

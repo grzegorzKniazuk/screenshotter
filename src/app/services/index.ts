@@ -4,3 +4,4 @@ export * from './storage.service';
 export * from './tabs.service';
 export * from './time.service';
 export * from './toast.service';
+export * from './browser-action.service';

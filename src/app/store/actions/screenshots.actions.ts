@@ -42,3 +42,8 @@ export const RESET_NEW_SCREENSHOT_COUNT = createAction(
 export const CLEAR_SCREENSHOTS_STORAGE = createAction(
     '[settings] clear screenshots storage',
 );
+
+export const SET_NEW_SCREENSHOT_COUNT = createAction(
+    '[app effects] set new screenshot count',
+    props<{ newScreenshotCount: number }>(),
+);

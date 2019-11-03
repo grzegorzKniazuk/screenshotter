@@ -5,19 +5,21 @@ import {
     ADD_SCREENSHOT,
     ADD_SCREENSHOTS,
     CLEAR_SCREENSHOTS_STORAGE,
+    REMOVE_BADGE_TEXT,
     DELETE_SCREENSHOT,
     DOWNLOAD_SCREENSHOT,
     INCREASE_NEW_SCREENSHOT_COUNT,
     MAKE_SCREENSHOT,
     OPEN_SOURCE,
+    RESET_NEW_SCREENSHOT_COUNT,
+    SET_BADGE_TEXT,
 } from 'src/app/store/actions';
-import { tap, withLatestFrom } from 'rxjs/operators';
-import { v4 as uuid } from 'uuid';
+import { map, tap, withLatestFrom } from 'rxjs/operators';
 import { AppState } from 'src/app/store/index';
 import { Screenshot, Settings } from 'src/app/interfaces';
 import { DownloadsService, StorageService, TabsService, ToastService } from 'src/app/services';
 import { SCREENSHOTS_STORAGE_KEY } from 'src/app/constants';
-import { selectAutoDownloadState, selectScreenshots, selectSettingsState } from 'src/app/store/selectors';
+import { selectAutoDownloadState, selectNewScreenshotCounter, selectScreenshots, selectSettingsState } from 'src/app/store/selectors';
 import { FileFormat } from 'src/app/enums';
 import { DownloadScreenshotDto } from 'src/app/dto';
 import { Bind } from 'lodash-decorators';
@@ -31,11 +33,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
         return this.actions$.pipe(
             ofType(ROOT_EFFECTS_INIT),
             StorageService.browserStorageApiAvailability(),
-            tap(() => {
-                this.storageService.get(SCREENSHOTS_STORAGE_KEY, (screenshots: { [key: string]: Screenshot[] }) => {
-                    this.store.dispatch(ADD_SCREENSHOTS({ screenshots: screenshots[SCREENSHOTS_STORAGE_KEY] }));
-                });
-            }),
+            tap(this.loadScreenshotsFromStorage),
         );
     }, { dispatch: false });
 
@@ -44,26 +42,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
             ofType(MAKE_SCREENSHOT),
             TabsService.browserTabsApiAvailability(),
             withLatestFrom(this.store.pipe(select(selectSettingsState))),
-            tap(([ , { fileFormat, fileQuality } ]: [ Action, Settings ]) => {
-                this.tabsService.query(({ active: true }), (tabs: Tab[]) => {
-                    const { title, url } = tabs.find((tab: Tab) => tab.active);
-
-                    this.tabsService.captureVisibleTab({ format: fileFormat, quality: fileQuality }, (dataUrl: string) => {
-                        this.store.dispatch(ADD_SCREENSHOT({
-                            screenshot: {
-                                id: uuid(),
-                                data: dataUrl,
-                                time: new Date().toISOString(),
-                                title,
-                                url,
-                                size: this.dataUrlToBytes(dataUrl),
-                                format: fileFormat,
-                                quality: fileFormat === FileFormat.JPEG ? fileQuality : 100,
-                            },
-                        }));
-                    });
-                });
-            }),
+            tap(this.captureVisibleTab),
         );
     }, { dispatch: false });
 
@@ -72,25 +51,21 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
             ofType(ADD_SCREENSHOT),
             StorageService.browserStorageApiAvailability(),
             withLatestFrom(this.store.pipe(select(selectAutoDownloadState)), this.store.pipe(select(selectScreenshots))),
-            tap(([ { screenshot }, autoDownloadState ]: [ { screenshot: Screenshot }, boolean, Screenshot[] ]) => {
-                if (autoDownloadState) {
-                    this.store.dispatch(DOWNLOAD_SCREENSHOT(ScreenshotsEffects.createDownloadScreenshotDto(screenshot)));
-                }
-            }),
-            tap(([ , , screenshots ]: [ { screenshot: Screenshot }, boolean, Screenshot[] ]) => this.storageService.set({ [SCREENSHOTS_STORAGE_KEY]: screenshots })),
-            tap(this.notifySuccessfulAdd),
-            tap(this.increaseNewScreenshotCounter),
+            tap(this.downloadScreenshotOnEnabledAutoDownloadOption),
+            tap(this.saveScreenshotLocally),
+            tap(this.notifySuccessSave),
             tap(this.updateBytesInUse),
+            map(() => INCREASE_NEW_SCREENSHOT_COUNT()),
         );
-    }, { dispatch: false });
+    });
 
     public readonly onDeleteScreenshot$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(DELETE_SCREENSHOT),
             StorageService.browserStorageApiAvailability(),
             withLatestFrom(this.store.pipe(select(selectScreenshots))),
-            tap(([ , screenshots ]: [ Action, Screenshot[] ]) => this.storageService.set({ [SCREENSHOTS_STORAGE_KEY]: screenshots })),
-            tap(this.notifySuccessfulDelete),
+            tap(this.updateLocalScreenshotsStorage),
+            tap(this.notifySuccessDelete),
             tap(this.updateBytesInUse),
         );
     }, { dispatch: false });
@@ -99,7 +74,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
         return this.actions$.pipe(
             ofType(OPEN_SOURCE),
             TabsService.browserTabsApiAvailability(),
-            tap(this.openScreenshotSource),
+            tap(this.openBrowserTab),
         );
     }, { dispatch: false });
 
@@ -109,19 +84,35 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
             DownloadsService.browserDownloadsApiAvailability(),
             withLatestFrom(this.store.pipe(select(selectSettingsState))),
             tap(this.downloadScreenshot),
-            tap(this.notifySuccessfulDownload),
+            tap(this.notifySuccessDownload),
         );
     }, { dispatch: false });
 
-    public readonly onClearScreenshotsStorage = createEffect(() => {
+    public readonly onClearScreenshotsStorage$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(CLEAR_SCREENSHOTS_STORAGE),
             StorageService.browserStorageApiAvailability(),
-            tap(this.clearStorage),
-            tap(this.notifySuccessfulClear),
+            tap(this.clearScreenshotsStorage),
+            tap(this.notifySuccessStorageClear),
             tap(this.updateBytesInUse),
         );
     }, { dispatch: false });
+
+    public readonly onIncreaseNewScreenshotCount$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(INCREASE_NEW_SCREENSHOT_COUNT),
+            withLatestFrom(this.store.pipe(select(selectNewScreenshotCounter))),
+            StorageService.browserStorageApiAvailability(),
+            map(([ , newScreenshotCounter ]: [ Action, number ]) => SET_BADGE_TEXT({ text: `${newScreenshotCounter}` })),
+        );
+    });
+
+    public readonly onResetNewScreenshotCount$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(RESET_NEW_SCREENSHOT_COUNT),
+            map(() => REMOVE_BADGE_TEXT()),
+        );
+    });
 
     constructor(
         private readonly actions$: Actions,
@@ -142,17 +133,46 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
         return { type: ROOT_EFFECTS_INIT };
     }
 
-    @Bind notifySuccessfulClear(): void {
-        this.toastService.success('Screenshots have been removed');
+    @Bind
+    private loadScreenshotsFromStorage(): void {
+        this.storageService.get(SCREENSHOTS_STORAGE_KEY, (items) => {
+            if (items && Array.isArray(items[SCREENSHOTS_STORAGE_KEY])) {
+                this.store.dispatch(ADD_SCREENSHOTS({ screenshots: items[SCREENSHOTS_STORAGE_KEY] }));
+            }
+        });
+    }
+
+    @Bind
+    private captureVisibleTab([ , { fileFormat, fileQuality } ]: [ Action, Settings ]): void {
+        this.tabsService.query(({ active: true }), (tabs: Tab[]) => {
+            const { title, url } = tabs.find((tab: Tab) => tab.active);
+
+            this.tabsService.captureVisibleTab({ format: fileFormat, quality: fileQuality }, (dataUrl: string) => {
+                this.store.dispatch(ADD_SCREENSHOT({
+                    screenshot: {
+                        id: this.uuid(),
+                        data: dataUrl,
+                        time: new Date().toISOString(),
+                        title,
+                        url,
+                        size: this.dataUrlToBytes(dataUrl),
+                        format: fileFormat,
+                        quality: fileFormat === FileFormat.JPEG ? fileQuality : 100,
+                    },
+                }));
+            });
+        });
+    }
+
+    @Bind
+    private downloadScreenshotOnEnabledAutoDownloadOption([ { screenshot }, autoDownloadState ]: [ { screenshot: Screenshot }, boolean, Screenshot[] ]): void {
+        if (autoDownloadState) {
+            this.store.dispatch(DOWNLOAD_SCREENSHOT(ScreenshotsEffects.createDownloadScreenshotDto(screenshot)));
+        }
     }
 
     private dataUrlToBytes(dataUrl: string): number {
         return window.atob(dataUrl.split(',')[1]).length;
-    }
-
-    @Bind
-    private openScreenshotSource({ url }: { url: string }): void {
-        this.tabsService.create({ url });
     }
 
     @Bind
@@ -161,27 +181,52 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
     }
 
     @Bind
-    private increaseNewScreenshotCounter(): void {
-        this.store.dispatch(INCREASE_NEW_SCREENSHOT_COUNT());
+    private notifySuccessStorageClear(): void {
+        this.toastService.success('Screenshots have been removed');
     }
 
     @Bind
-    private notifySuccessfulDownload(): void {
+    private notifySuccessDownload(): void {
         this.toastService.success('Screenshot has been downloaded');
     }
 
     @Bind
-    private notifySuccessfulAdd(): void {
-        this.toastService.success('Screenshot has been saved');
-    }
-
-    @Bind
-    private notifySuccessfulDelete(): void {
+    private notifySuccessDelete(): void {
         this.toastService.success('Screenshot has been deleted');
     }
 
     @Bind
-    private clearStorage(): void {
+    private notifySuccessSave(): void {
+        this.toastService.success('Screenshot has been saved');
+    }
+
+    @Bind
+    private saveScreenshotLocally([ , , screenshots ]: [ { screenshot: Screenshot }, boolean, Screenshot[] ]): void {
+        this.storageService.set({ [SCREENSHOTS_STORAGE_KEY]: screenshots });
+    }
+
+    @Bind
+    private updateLocalScreenshotsStorage([ , screenshots ]: [ Action, Screenshot[] ]): void {
+        this.storageService.set({ [SCREENSHOTS_STORAGE_KEY]: screenshots });
+    }
+
+    @Bind
+    private openBrowserTab({ url }: { url: string }): void {
+        this.tabsService.create({ url });
+    }
+
+    @Bind
+    private clearScreenshotsStorage(): void {
         this.storageService.remove(SCREENSHOTS_STORAGE_KEY);
+    }
+
+    private uuid() {
+        let dt = new Date().getTime();
+
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+            const r = (dt + Math.random() * 16) % 16 | 0;
+            dt = Math.floor(dt / 16);
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
     }
 }

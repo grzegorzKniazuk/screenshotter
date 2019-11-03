@@ -12,7 +12,7 @@ import { appReducers } from 'src/app/store';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { DashboardComponent, NewScreenshotComponent, ScreenshotGalleryComponent, SettingsComponent } from 'src/app/views';
 import { DashboardNavComponent, IconComponent, ScreenshotCardComponent } from 'src/app/components';
-import { ScreenshotsEffects, SettingsEffects } from 'src/app/store/effects';
+import { AppEffects, ScreenshotsEffects, SettingsEffects } from 'src/app/store/effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -52,7 +52,7 @@ const modules: any[] = [
 const store: any[] = [
     StoreModule.forRoot(appReducers, { runtimeChecks: RUNTIME_CHECKS }),
     StoreRouterConnectingModule.forRoot(STORE_ROUTER_CONNECTING_CONFIG),
-    EffectsModule.forRoot([ ScreenshotsEffects, SettingsEffects ]),
+    EffectsModule.forRoot([ AppEffects, ScreenshotsEffects, SettingsEffects ]),
     environment.production ? [] : [ StoreDevtoolsModule.instrument() ],
 ];
 

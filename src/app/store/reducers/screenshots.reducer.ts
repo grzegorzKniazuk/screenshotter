@@ -1,7 +1,15 @@
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { Screenshot } from 'src/app/interfaces/screenshot';
 import { Action, createReducer, on } from '@ngrx/store';
-import { ADD_SCREENSHOT, ADD_SCREENSHOTS, CLEAR_SCREENSHOTS_STORAGE, DELETE_SCREENSHOT, INCREASE_NEW_SCREENSHOT_COUNT, RESET_NEW_SCREENSHOT_COUNT } from 'src/app/store/actions';
+import {
+    ADD_SCREENSHOT,
+    ADD_SCREENSHOTS,
+    CLEAR_SCREENSHOTS_STORAGE,
+    DELETE_SCREENSHOT,
+    INCREASE_NEW_SCREENSHOT_COUNT,
+    RESET_NEW_SCREENSHOT_COUNT,
+    SET_NEW_SCREENSHOT_COUNT,
+} from 'src/app/store/actions';
 import { TimeService } from 'src/app/services';
 
 export interface ScreenshotsState extends EntityState<Screenshot> {
@@ -55,6 +63,12 @@ const reducer = createReducer(
             ...state,
             newScreenshotCount: 0,
         });
+    }),
+    on(SET_NEW_SCREENSHOT_COUNT, (state, { newScreenshotCount }) => {
+        return {
+            ...state,
+            newScreenshotCount,
+        };
     }),
 );
 

@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { AppState } from 'src/app/store';
 import { Observable } from 'rxjs';
 import { Screenshot } from 'src/app/interfaces/screenshot';
-import { DELETE_SCREENSHOT, DOWNLOAD_SCREENSHOT, OPEN_SOURCE, RESET_NEW_SCREENSHOT_COUNT } from 'src/app/store/actions';
+import { DELETE_SCREENSHOT, DOWNLOAD_SCREENSHOT, OPEN_SOURCE } from 'src/app/store/actions';
 import { DownloadScreenshotDto } from 'src/app/dto';
 import { ToastService } from 'src/app/services';
 import { selectScreenshots } from 'src/app/store/selectors';
@@ -14,7 +14,7 @@ import { selectScreenshots } from 'src/app/store/selectors';
     styleUrls: [ './screenshot-gallery.component.scss', '../dashboard.component.scss' ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScreenshotGalleryComponent implements OnInit {
+export class ScreenshotGalleryComponent {
 
     public readonly images$: Observable<Screenshot[]> = this.store.pipe(select(selectScreenshots));
 
@@ -22,10 +22,6 @@ export class ScreenshotGalleryComponent implements OnInit {
         private readonly store: Store<AppState>,
         private readonly toastService: ToastService,
     ) {
-    }
-
-    ngOnInit() {
-        this.store.dispatch(RESET_NEW_SCREENSHOT_COUNT());
     }
 
     public onDelete(id: string): void {

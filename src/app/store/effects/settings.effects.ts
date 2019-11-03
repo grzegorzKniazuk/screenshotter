@@ -6,9 +6,9 @@ import { DownloadsService, StorageService, ToastService } from 'src/app/services
 import { tap } from 'rxjs/operators';
 import { SETTINGS_STORAGE_KEY } from 'src/app/constants';
 import { AppState } from 'src/app/store/index';
-import { Bind } from 'lodash-decorators';
 import { BaseEffects } from 'src/app/store/effects/base.effects';
 import { Settings } from 'src/app/interfaces';
+import { Bind } from 'lodash-decorators';
 
 @Injectable({
     providedIn: 'root',
@@ -19,12 +19,12 @@ export class SettingsEffects extends BaseEffects implements OnInitEffects {
         return this.actions$.pipe(
             ofType(ROOT_EFFECTS_INIT),
             StorageService.browserStorageApiAvailability(),
-            tap(this.loadExtensionSettings),
+            tap(this.loadExtensionSettingsFromStorage),
             tap(this.updateBytesInUse),
         );
     }, { dispatch: false });
 
-    public readonly onUpdateSettings = createEffect(() => {
+    public readonly onUpdateSettings$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(UPDATE_SETTINGS),
             StorageService.browserStorageApiAvailability(),
@@ -33,11 +33,11 @@ export class SettingsEffects extends BaseEffects implements OnInitEffects {
         );
     }, { dispatch: false });
 
-    public readonly onOpenDownloadFolder = createEffect(() => {
+    public readonly onOpenDownloadFolder$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(OPEN_DOWNLOAD_FOLDER),
             DownloadsService.browserDownloadsApiAvailability(),
-            tap(() => this.downloadsService.showDefaultFolder()),
+            tap(this.downloadsService.showDefaultFolder),
         );
     }, { dispatch: false });
 
@@ -61,9 +61,11 @@ export class SettingsEffects extends BaseEffects implements OnInitEffects {
     }
 
     @Bind
-    private loadExtensionSettings(): void {
+    private loadExtensionSettingsFromStorage(): void {
         this.storageService.get(SETTINGS_STORAGE_KEY, (items) => {
-            this.store.dispatch(LOAD_SETTINGS({ settings: { ...items[SETTINGS_STORAGE_KEY] } }));
+            if (items && items[SETTINGS_STORAGE_KEY]) {
+                this.store.dispatch(LOAD_SETTINGS({ settings: { ...items[SETTINGS_STORAGE_KEY] } }));
+            }
         });
     }
 

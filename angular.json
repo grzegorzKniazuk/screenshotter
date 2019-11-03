@@ -45,7 +45,8 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/manifest.json"
+              "src/manifest.json",
+              "src/background.js"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -101,10 +102,10 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "screenshotter:build"
+            "browserTarget": "screenshoter:build"
           }
         }
       }
     }},
-  "defaultProject": "screenshotter"
+  "defaultProject": "screenshoter"
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-root',
@@ -6,5 +6,17 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     styleUrls: [ './app.component.scss' ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
+    ngOnInit() {
+        this.connectToBackgroundScript();
+    }
+
+    private connectToBackgroundScript() {
+        if (chrome && chrome.runtime) {
+            chrome.runtime.connect({
+                name: 'screenshoter',
+            });
+        }
+    }
 }
