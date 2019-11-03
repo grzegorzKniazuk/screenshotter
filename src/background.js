@@ -11,20 +11,24 @@ const INITIAL_SETTINGS = {
     alwaysShowSaveAs: false,
 };
 
+chrome.omnibox.setDefaultSuggestion({ description: 'make - capture new screenshot' });
+
 chrome.runtime.onConnect.addListener(onConnect);
 chrome.commands.onCommand.addListener(onCommand);
+chrome.omnibox.onInputEntered.addListener(onOmniboxInputEntered);
 
 function onConnect(port) {
     port.onDisconnect.addListener(deleteBadgeText);
     port.onDisconnect.addListener(resetNewScreenshotCounter);
 }
 
-function deleteBadgeText() {
-    chrome.browserAction.setBadgeText({ text: '' });
-}
-
-function resetNewScreenshotCounter() {
-    chrome.storage.local.remove(NEW_SCREENSHOT_COUNT_STORAGE_KEY);
+function onOmniboxInputEntered(text) {
+    switch (text) {
+        case 'make': {
+            captureNewScreenshot();
+            break;
+        }
+    }
 }
 
 function onCommand(triggeredCommand) {
@@ -34,6 +38,14 @@ function onCommand(triggeredCommand) {
             break;
         }
     }
+}
+
+function deleteBadgeText() {
+    chrome.browserAction.setBadgeText({ text: '' });
+}
+
+function resetNewScreenshotCounter() {
+    chrome.storage.local.remove(NEW_SCREENSHOT_COUNT_STORAGE_KEY);
 }
 
 function captureNewScreenshot() {
