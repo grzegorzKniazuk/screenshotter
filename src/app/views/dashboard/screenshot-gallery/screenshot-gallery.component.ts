@@ -3,7 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { AppState } from 'src/app/store';
 import { Observable } from 'rxjs';
 import { Screenshot } from 'src/app/interfaces/screenshot';
-import { DELETE_SCREENSHOT, DOWNLOAD_SCREENSHOT, OPEN_SOURCE } from 'src/app/store/actions';
+import { DELETE_SCREENSHOT, DOWNLOAD_SCREENSHOT, OPEN_SOURCE, PREVIEW_SCREENSHOT } from 'src/app/store/actions';
 import { DownloadScreenshotDto } from 'src/app/dto';
 import { ToastService } from 'src/app/services';
 import { selectScreenshots, selectScreenshotsByQuery } from 'src/app/store/selectors';
@@ -34,11 +34,15 @@ export class ScreenshotGalleryComponent {
         this.store.dispatch(OPEN_SOURCE({ url }));
     }
 
-    public onDownload({ data, filename }: DownloadScreenshotDto): void {
-        this.store.dispatch(DOWNLOAD_SCREENSHOT({ data, filename }));
+    public onDownload(downloadScreenshotDto: DownloadScreenshotDto): void {
+        this.store.dispatch(DOWNLOAD_SCREENSHOT(downloadScreenshotDto));
     }
 
     public onSearch(query: string): void {
         this.images$ = this.store.pipe(select(selectScreenshotsByQuery, { title: query }));
+    }
+
+    public onPreview(data: { data: string }): void {
+        this.store.dispatch(PREVIEW_SCREENSHOT(data));
     }
 }

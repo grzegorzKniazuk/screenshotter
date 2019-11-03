@@ -10,4 +10,5 @@ export class IconComponent {
     @Input() public readonly size: string = '1';
     @Input() public readonly inline: boolean = true;
     @Input() public readonly action: boolean = false;
+    @Input() public readonly color = 'black';
 }

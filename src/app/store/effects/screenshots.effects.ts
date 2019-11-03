@@ -5,12 +5,13 @@ import {
     ADD_SCREENSHOT,
     ADD_SCREENSHOTS,
     CLEAR_SCREENSHOTS_STORAGE,
-    REMOVE_BADGE_TEXT,
     DELETE_SCREENSHOT,
     DOWNLOAD_SCREENSHOT,
     INCREASE_NEW_SCREENSHOT_COUNT,
     MAKE_SCREENSHOT,
     OPEN_SOURCE,
+    PREVIEW_SCREENSHOT,
+    REMOVE_BADGE_TEXT,
     RESET_NEW_SCREENSHOT_COUNT,
     SET_BADGE_TEXT,
 } from 'src/app/store/actions';
@@ -74,7 +75,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
         return this.actions$.pipe(
             ofType(OPEN_SOURCE),
             TabsService.browserTabsApiAvailability(),
-            tap(this.openBrowserTab),
+            tap(({ url }) => this.openBrowserTab(url)),
         );
     }, { dispatch: false });
 
@@ -113,6 +114,14 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
             map(() => REMOVE_BADGE_TEXT()),
         );
     });
+
+    public readonly onPreviewScreenshot$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(PREVIEW_SCREENSHOT),
+            TabsService.browserTabsApiAvailability(),
+            tap(({ data }: { data: string }) => this.openBrowserTab(data)),
+        );
+    }, { dispatch: false });
 
     constructor(
         private readonly actions$: Actions,
@@ -210,8 +219,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
         this.storageService.set({ [SCREENSHOTS_STORAGE_KEY]: screenshots });
     }
 
-    @Bind
-    private openBrowserTab({ url }: { url: string }): void {
+    private openBrowserTab(url: string): void {
         this.tabsService.create({ url });
     }
 

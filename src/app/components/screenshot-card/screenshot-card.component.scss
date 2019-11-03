@@ -1,21 +1,65 @@
-mat-card.screenshot-card {
-    width: 21rem;
+@import "colors.scss";
 
-    mat-card-content.mat-card-content {
-        display: flex;
-        justify-content: center;
+.container {
+    width: 21rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: .625rem;
+    background: $light;
+    position: relative;
+    box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
+
+    h2 {
+        text-align: center;
+        padding: .3125rem 0;
     }
 
-    mat-card-actions.mat-card-actions {
+    img {
+        display: block;
+        width: calc(100% - (2 * .0625rem));
+    }
+
+    .caption {
+        text-align: center;
+        padding: .3125rem 0;
+    }
+
+    mat-chip-list {
+        position: absolute;
+        bottom: 2.1875rem;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
+        width: 100%;
+    }
 
-        button.mat-button {
-            margin: 0;
+    .actions {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        height: 0;
+        background: rgba(0, 0, 0, .2);
+        border-radius: .625rem;
+        opacity: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-            span {
-                font-size: .75rem;
-                margin-left: .35rem;
+    &:hover {
+        img {
+            filter: blur(.2rem);
+        }
+
+        .actions {
+            opacity: 1;
+            transition: 250ms all;
+            height: 100%;
+
+            app-icon:not(:last-of-type) {
+                margin-left: .5rem;
             }
         }
     }

@@ -1,28 +1,17 @@
-<mat-card class="screenshot-card">
-    <mat-card-header>
-        <mat-card-title>{{ screenshot.title }}</mat-card-title>
-        <mat-card-subtitle>{{ screenshot.time | date:'short' }}</mat-card-subtitle>
-    </mat-card-header>
-    <img [alt]="screenshot.title" [attr.data-src]="screenshot.data" appLazyLoadImage mat-card-image>
-    <mat-card-content>
-        <mat-chip-list>
-            <mat-chip *ngIf="screenshot.size" matTooltip="Screenshot size">{{ screenshot.size | bytesTo:'mb' | number:'0.2-2' }} MB</mat-chip>
-            <mat-chip *ngIf="screenshot.format" matTooltip="Screenshot format">{{ screenshot.format }}</mat-chip>
-            <mat-chip *ngIf="screenshot.quality" matTooltip="Screenshot quality">{{ screenshot.quality }}/100</mat-chip>
-        </mat-chip-list>
-    </mat-card-content>
-    <mat-card-actions>
-        <button (click)="onScreenshotDownload()" color="primary" mat-button mat-raised-button>
-            <app-icon>cloud_download</app-icon>
-            <span>Download</span>
-        </button>
-        <button (click)="onOpenSource()" [matTooltip]="screenshot.url" mat-button mat-raised-button>
-            <app-icon>link</app-icon>
-            <span>Source</span>
-        </button>
-        <button (click)="onScreenshotDelete()" color="warn" mat-button mat-raised-button>
-            <app-icon>delete</app-icon>
-            <span>Delete</span>
-        </button>
-    </mat-card-actions>
-</mat-card>
+<div class="container">
+    <h2>{{ screenshot.title }}</h2>
+    <img [alt]="screenshot.title" [attr.data-src]="screenshot.data" appLazyLoadImage>
+    <div class="caption">{{ screenshot.time | date:'short' }}</div>
+    <mat-chip-list>
+        <mat-chip *ngIf="screenshot.size" matTooltip="Screenshot size">{{ screenshot.size | bytesTo:'mb' | number:'0.2-2' }} MB</mat-chip>
+        <mat-chip *ngIf="screenshot.format" matTooltip="Screenshot format">{{ screenshot.format }}</mat-chip>
+        <mat-chip *ngIf="screenshot.quality" matTooltip="Screenshot quality">{{ screenshot.quality }}/100</mat-chip>
+    </mat-chip-list>
+    <div class="actions">
+        <app-icon size="4" [action]="true" matTooltip="Preview" (click)="onScreenshotPreview()">photo</app-icon>
+        <app-icon size="4" [action]="true" matTooltip="Download" (click)="onScreenshotDownload()">cloud_download</app-icon>
+        <app-icon size="4" [action]="true" [matTooltip]="screenshot.url" (click)="onOpenSource()">open_in_browser</app-icon>
+        <app-icon size="4" [action]="true" matTooltip="delete" (click)="onScreenshotDelete()">delete</app-icon>
+    </div>
+    <div class="overlay"></div>
+</div>

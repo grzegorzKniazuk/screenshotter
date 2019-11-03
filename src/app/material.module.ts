@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import {
     MatBadgeModule,
     MatButtonModule,
-    MatCardModule,
     MatChipsModule,
     MatExpansionModule,
     MatFormFieldModule,
@@ -18,7 +17,6 @@ import {
 const modules: any[] = [
     MatTabsModule,
     MatIconModule,
-    MatCardModule,
     MatBadgeModule,
     MatButtonModule,
     MatRadioModule,

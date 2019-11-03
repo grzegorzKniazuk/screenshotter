@@ -2,7 +2,7 @@
      [class.no-images]="!(images$ | async).length" class="content-container">
     <ng-container *ngIf="(images$ | async).length; else noImages">
         <div *ngFor="let image of (images$ | async)" class="screenshot">
-            <app-screenshot-card (onDelete)="onDelete($event)" (onDownload)="onDownload($event)" (onOpen)="onOpen($event)" [screenshot]="image"></app-screenshot-card>
+            <app-screenshot-card (onDelete)="onDelete($event)" (onDownload)="onDownload($event)" (onOpen)="onOpen($event)" [screenshot]="image" (onPreview)="onPreview($event)"></app-screenshot-card>
         </div>
     </ng-container>
 </div>

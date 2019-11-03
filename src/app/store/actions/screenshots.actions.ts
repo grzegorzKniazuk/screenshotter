@@ -47,3 +47,8 @@ export const SET_NEW_SCREENSHOT_COUNT = createAction(
     '[app effects] set new screenshot count',
     props<{ newScreenshotCount: number }>(),
 );
+
+export const PREVIEW_SCREENSHOT = createAction(
+    `[screenshot card] preview screenshot`,
+    props<{ data: string }>()
+);
