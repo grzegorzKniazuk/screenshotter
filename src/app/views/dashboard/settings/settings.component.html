@@ -3,9 +3,7 @@
         <mat-accordion [multi]="true">
             <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Capture options
-                    </mat-panel-title>
+                    <mat-panel-title>Capture options</mat-panel-title>
                 </mat-expansion-panel-header>
                 <div class="form-panel-content">
                     <label id="file-type-group-label">Screenshot file format</label>
@@ -20,9 +18,7 @@
             </mat-expansion-panel>
             <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Download options
-                    </mat-panel-title>
+                    <mat-panel-title>Download options</mat-panel-title>
                 </mat-expansion-panel-header>
                 <div class="form-panel-content">
                     <label id="auto-download-label">Automatically download new screenshots</label>
@@ -40,9 +36,7 @@
             </mat-expansion-panel>
             <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Storage options
-                    </mat-panel-title>
+                    <mat-panel-title>Storage options</mat-panel-title>
                     <mat-panel-description>Usage: {{ bytesInUse$ | async | bytesTo:'mb' | number:'0.2-2' }} MB</mat-panel-description>
                 </mat-expansion-panel-header>
                 <div class="form-panel-content">
@@ -51,6 +45,13 @@
                 <mat-action-row>
                     <button (click)="clearStorage()" color="warn" mat-raised-button>Clear storage</button>
                 </mat-action-row>
+            </mat-expansion-panel>
+            <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>Credits</mat-panel-title>
+                </mat-expansion-panel-header>
+                Application icon made by <a href="https://www.flaticon.com/authors/pixel-perfect" (click)="openExternalTab('https://www.flaticon.com/authors/pixel-perfect')">Pixel perfect</a>
+                from <a href="https://www.flaticon.com" (click)="openExternalTab('https://www.flaticon.com')">www.flaticon.com</a>
             </mat-expansion-panel>
         </mat-accordion>
     </form>

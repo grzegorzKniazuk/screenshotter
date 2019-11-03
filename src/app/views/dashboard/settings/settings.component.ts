@@ -10,7 +10,7 @@ import { CLEAR_SCREENSHOTS_STORAGE, OPEN_DOWNLOAD_FOLDER, UPDATE_SETTINGS } from
 import { ActivatedRoute } from '@angular/router';
 import { SETTINGS_STORAGE_KEY } from 'src/app/constants';
 import { Bind } from 'lodash-decorators';
-import { ToastService } from 'src/app/services';
+import { TabsService, ToastService } from 'src/app/services';
 import { selectBytesInUse } from 'src/app/store/selectors';
 
 @Component({
@@ -33,6 +33,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         private readonly store: Store<AppState>,
         private readonly activatedRoute: ActivatedRoute,
         private readonly toastService: ToastService,
+        private readonly tabsService: TabsService,
     ) {
     }
 
@@ -99,5 +100,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
     @Bind
     private updateExtensionSettings(): void {
         this.store.dispatch(UPDATE_SETTINGS({ settings: { ...this.settingsForm.getRawValue() } }));
+    }
+
+    public openExternalTab(url: string): void {
+        this.tabsService.create({ url });
     }
 }
