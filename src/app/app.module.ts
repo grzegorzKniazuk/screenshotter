@@ -11,11 +11,11 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { appReducers } from 'src/app/store';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { DashboardComponent, NewScreenshotComponent, ScreenshotGalleryComponent, SettingsComponent } from 'src/app/views';
-import { DashboardNavComponent, IconComponent, ScreenshotCardComponent } from 'src/app/components';
+import { DashboardNavComponent, IconComponent, ScreenshotCardComponent, SearchBarComponent } from 'src/app/components';
 import { AppEffects, ScreenshotsEffects, SettingsEffects } from 'src/app/store/effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from 'src/app/material.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BytesToPipe } from 'src/app/pipes';
 import { LazyLoadImageDirective } from 'src/app/directives';
 
@@ -31,6 +31,7 @@ const components: any[] = [
     NewScreenshotComponent,
     IconComponent,
     ScreenshotCardComponent,
+    SearchBarComponent,
 ];
 
 const pipes: any[] = [
@@ -45,6 +46,7 @@ const modules: any[] = [
     BrowserModule,
     BrowserAnimationsModule,
     MaterialModule,
+    FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
 ];
