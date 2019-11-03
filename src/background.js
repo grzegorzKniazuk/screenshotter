@@ -62,6 +62,7 @@ function captureNewScreenshot() {
             updateLocalScreenshotsStorage(screenshot, screenshots);
             updateBadgeText(newScreenshotCount);
             updateNewScreenshotCounter(newScreenshotCount);
+            notifySuccessfulScreenshotCapture(screenshot.data);
         });
     });
 }
@@ -105,6 +106,18 @@ function updateBadgeText(newScreenshotCount) {
 
 function updateNewScreenshotCounter(newScreenshotCount) {
     chrome.storage.local.set({ [NEW_SCREENSHOT_COUNT_STORAGE_KEY]: newScreenshotCount + 1 });
+}
+
+function notifySuccessfulScreenshotCapture(dataUrl) {
+    if (chrome.notifications.onClicked.hasListeners()) {
+        chrome.notifications.onClicked.removeListener();
+    }
+
+    chrome.notifications.create({ type: 'image', title: 'Screenshoter', message: 'Screenshot has been saved', iconUrl: 'assets/browser-48.png', imageUrl: dataUrl });
+
+    chrome.notifications.onClicked.addListener(() => {
+       chrome.tabs.create({ url: dataUrl });
+    });
 }
 
 function loadExtensionSettingsFromStorage() {

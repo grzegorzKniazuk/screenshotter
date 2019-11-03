@@ -3,7 +3,10 @@
     align-items: center;
     flex-direction: column;
 
-    p {
+    p:first-of-type {
         font-size: 1.2rem;
+    }
+    p:last-of-type {
+        font-size: .8rem;
     }
 }
