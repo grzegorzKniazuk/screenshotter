@@ -5,14 +5,6 @@
     cursor: pointer;
 }
 
-.icon-clickable {
-    cursor: pointer;
-
-    &:hover {
-        transition: color $base-animation-duration ease-in-out;
-    }
-}
-
 .toast-container {
     font: 1rem 'Roboto', sans-serif;
 }

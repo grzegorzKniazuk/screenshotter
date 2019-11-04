@@ -1,5 +1,5 @@
 <div class="container">
-    <h2>{{ screenshot.title }}</h2>
+    <h2 [matTooltip]="screenshot.title">{{ screenshot.title }}</h2>
     <img [alt]="screenshot.title" [attr.data-src]="screenshot.data" appLazyLoadImage>
     <div class="caption">{{ screenshot.time | date:'short' }}</div>
     <mat-chip-list>
@@ -8,11 +8,15 @@
         <mat-chip *ngIf="screenshot.quality" matTooltip="Screenshot quality">{{ screenshot.quality }}/100</mat-chip>
     </mat-chip-list>
     <div class="actions">
-        <app-icon size="3.5" [action]="true" matTooltip="Add to favorite" (click)="onFavoriteChange()">{{ screenshot.favorite ? 'favorite' : 'favorite_border' }}r</app-icon>
+        <app-icon size="3.5" [action]="true" actionColor="firebrick"
+                  [matTooltip]="screenshot.favorite ? 'Remove from favorites' : 'Add to favorites'"
+                  (click)="onFavoriteChange()">{{ screenshot.favorite ? 'favorite' : 'favorite_border' }}
+        </app-icon>
         <app-icon size="3.5" [action]="true" matTooltip="Preview" (click)="onScreenshotPreview()">photo</app-icon>
         <app-icon size="3.5" [action]="true" matTooltip="Download" (click)="onScreenshotDownload()">cloud_download</app-icon>
         <app-icon size="3.5" [action]="true" [matTooltip]="screenshot.url" (click)="onOpenSource()">open_in_browser</app-icon>
-        <app-icon size="3.5" [action]="true" matTooltip="delete" (click)="onScreenshotDelete()">delete</app-icon>
+        <app-icon size="3.5" [action]="true" actionColor="red" matTooltip="delete" (click)="onScreenshotDelete()">delete</app-icon>
     </div>
     <app-icon *ngIf="screenshot.favorite" size="2" class="favorite-icon" color="firebrick">favorite</app-icon>
 </div>
+b

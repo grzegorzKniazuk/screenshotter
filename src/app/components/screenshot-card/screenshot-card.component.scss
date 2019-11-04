@@ -13,6 +13,9 @@
     h2 {
         text-align: center;
         padding: .3125rem 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     img {
@@ -50,8 +53,9 @@
 
     .favorite-icon {
         position: absolute;
-        top: 1.5rem;
+        top: 1.75rem;
         right: .5rem;
+        opacity: 1;
     }
 
     &:hover {
@@ -71,6 +75,10 @@
             app-icon:not(:last-of-type) {
                 margin-left: .5rem;
             }
+        }
+
+        .favorite-icon {
+            opacity: 0;
         }
     }
 }

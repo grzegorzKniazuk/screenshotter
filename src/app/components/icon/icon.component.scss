@@ -1,3 +1,13 @@
+@import "constants.scss";
+
 mat-icon.custom-mat-icon {
     user-select: none;
+
+    &.icon-clickable {
+        cursor: pointer;
+
+        &:hover {
+            transition: color $base-animation-duration ease-in-out;
+        }
+    }
 }
