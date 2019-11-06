@@ -19,6 +19,6 @@ export class DownloadsService extends ApiService {
 
     @Bind
     public showDefaultFolder(): void {
-        chrome.downloads.showDefaultFolder();
+        this.chrome.downloads.showDefaultFolder();
     }
 }

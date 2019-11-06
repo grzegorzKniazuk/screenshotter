@@ -4,19 +4,20 @@ import { Action, select, Store } from '@ngrx/store';
 import {
     ADD_SCREENSHOT,
     ADD_SCREENSHOTS,
+    ADD_TO_FAVORITES,
     CLEAR_SCREENSHOTS_STORAGE,
     DELETE_SCREENSHOT,
     DOWNLOAD_SCREENSHOT,
     INCREASE_NEW_SCREENSHOT_COUNT,
     MAKE_SCREENSHOT,
-    OPEN_SOURCE,
+    OPEN_SCREENSHOT_SOURCE,
     PREVIEW_SCREENSHOT,
     REMOVE_BADGE_TEXT,
+    REMOVE_FROM_FAVORITES,
     RESET_NEW_SCREENSHOT_COUNT,
     SET_BADGE_TEXT,
-    UPDATE_SCREENSHOT,
 } from 'src/app/store/actions';
-import { map, tap, withLatestFrom } from 'rxjs/operators';
+import { first, map, switchMapTo, tap, withLatestFrom } from 'rxjs/operators';
 import { AppState } from 'src/app/store/index';
 import { Screenshot, Settings } from 'src/app/interfaces';
 import { DownloadsService, StorageService, TabsService, ToastService } from 'src/app/services';
@@ -43,7 +44,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
         return this.actions$.pipe(
             ofType(MAKE_SCREENSHOT),
             TabsService.browserTabsApiAvailability(),
-            withLatestFrom(this.store.pipe(select(selectSettingsState))),
+            switchMapTo(this.store.pipe(select(selectSettingsState), first())),
             tap(this.captureVisibleTab),
         );
     }, { dispatch: false });
@@ -52,23 +53,23 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
         return this.actions$.pipe(
             ofType(ADD_SCREENSHOT),
             StorageService.browserStorageApiAvailability(),
-            withLatestFrom(this.store.pipe(select(selectAutoDownloadState)), this.store.pipe(select(selectScreenshots))),
+            withLatestFrom(this.store.pipe(select(selectAutoDownloadState))),
             tap(this.downloadScreenshotOnEnabledAutoDownloadOption),
-            tap(this.saveScreenshotLocally),
+            switchMapTo(this.store.pipe(select(selectScreenshots), first())),
+            tap(this.updateLocalScreenshotsStorage),
             tap(this.notifySuccessSave),
             tap(this.updateBytesInUse),
             map(() => INCREASE_NEW_SCREENSHOT_COUNT()),
         );
     });
 
-    public readonly onUpdateScreenshot$ = createEffect(() => {
+    public readonly onFavoriteToggle$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(UPDATE_SCREENSHOT),
+            ofType(ADD_TO_FAVORITES, REMOVE_FROM_FAVORITES),
             StorageService.browserStorageApiAvailability(),
-            withLatestFrom(this.store.pipe(select(selectScreenshots))),
+            tap(this.notifyFavoritesToggle),
+            switchMapTo(this.store.pipe(select(selectScreenshots), first())),
             tap(this.updateLocalScreenshotsStorage),
-            tap(this.notifySuccessUpdate),
-            tap(this.updateBytesInUse),
         );
     }, { dispatch: false });
 
@@ -76,7 +77,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
         return this.actions$.pipe(
             ofType(DELETE_SCREENSHOT),
             StorageService.browserStorageApiAvailability(),
-            withLatestFrom(this.store.pipe(select(selectScreenshots))),
+            switchMapTo(this.store.pipe(select(selectScreenshots), first())),
             tap(this.updateLocalScreenshotsStorage),
             tap(this.notifySuccessDelete),
             tap(this.updateBytesInUse),
@@ -85,7 +86,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
 
     public readonly onOpenSource$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(OPEN_SOURCE),
+            ofType(OPEN_SCREENSHOT_SOURCE),
             TabsService.browserTabsApiAvailability(),
             tap(({ url }) => this.openBrowserTab(url)),
         );
@@ -164,7 +165,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
     }
 
     @Bind
-    private captureVisibleTab([ , { fileFormat, fileQuality } ]: [ Action, Settings ]): void {
+    private captureVisibleTab({ fileFormat, fileQuality }: Settings): void {
         this.tabsService.query(({ active: true }), (tabs: Tab[]) => {
             const { title, url } = tabs.find((tab: Tab) => tab.active);
 
@@ -187,7 +188,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
     }
 
     @Bind
-    private downloadScreenshotOnEnabledAutoDownloadOption([ { screenshot }, autoDownloadState ]: [ { screenshot: Screenshot }, boolean, Screenshot[] ]): void {
+    private downloadScreenshotOnEnabledAutoDownloadOption([ { screenshot }, autoDownloadState ]: [ { screenshot: Screenshot }, boolean ]): void {
         if (autoDownloadState) {
             this.store.dispatch(DOWNLOAD_SCREENSHOT(ScreenshotsEffects.createDownloadScreenshotDto(screenshot)));
         }
@@ -223,17 +224,16 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
     }
 
     @Bind
-    private notifySuccessUpdate(): void {
-        this.toastService.success('Screenshot has been updated');
+    private notifyFavoritesToggle({ type }: Action): void {
+        if (type === ADD_TO_FAVORITES.type) {
+            this.toastService.success('Screenshot added to favorites');
+        } else {
+            this.toastService.success('Screenshot removed from favorites');
+        }
     }
 
     @Bind
-    private saveScreenshotLocally([ , , screenshots ]: [ { screenshot: Screenshot }, boolean, Screenshot[] ]): void {
-        this.storageService.set({ [SCREENSHOTS_STORAGE_KEY]: screenshots });
-    }
-
-    @Bind
-    private updateLocalScreenshotsStorage([ , screenshots ]: [ Action, Screenshot[] ]): void {
+    private updateLocalScreenshotsStorage(screenshots: Screenshot[]): void {
         this.storageService.set({ [SCREENSHOTS_STORAGE_KEY]: screenshots });
     }
 

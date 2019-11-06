@@ -1,4 +1,3 @@
-export interface DownloadScreenshotDto {
-    data: string;
-    filename: string;
-}
+import { Screenshot } from 'src/app/interfaces';
+
+export type DownloadScreenshotDto = Pick<Screenshot, 'data'> & { filename: string };

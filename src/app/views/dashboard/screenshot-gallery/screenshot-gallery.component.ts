@@ -3,11 +3,10 @@ import { select, Store } from '@ngrx/store';
 import { AppState } from 'src/app/store';
 import { Observable } from 'rxjs';
 import { Screenshot } from 'src/app/interfaces/screenshot';
-import { DELETE_SCREENSHOT, DOWNLOAD_SCREENSHOT, OPEN_SOURCE, PREVIEW_SCREENSHOT, UPDATE_SCREENSHOT } from 'src/app/store/actions';
-import { DownloadScreenshotDto } from 'src/app/dto';
+import { ADD_TO_FAVORITES, DELETE_SCREENSHOT, DOWNLOAD_SCREENSHOT, OPEN_SCREENSHOT_SOURCE, PREVIEW_SCREENSHOT, REMOVE_FROM_FAVORITES } from 'src/app/store/actions';
+import { DownloadScreenshotDto, FavoriteScreenshotDto } from 'src/app/dto';
 import { ToastService } from 'src/app/services';
 import { selectScreenshots, selectScreenshotsByQuery } from 'src/app/store/selectors';
-import { Update } from '@ngrx/entity';
 
 @Component({
     selector: 'app-screenshot-gallery',
@@ -32,7 +31,7 @@ export class ScreenshotGalleryComponent {
     }
 
     public onOpen(url: string): void {
-        this.store.dispatch(OPEN_SOURCE({ url }));
+        this.store.dispatch(OPEN_SCREENSHOT_SOURCE({ url }));
     }
 
     public onDownload(downloadScreenshotDto: DownloadScreenshotDto): void {
@@ -47,8 +46,12 @@ export class ScreenshotGalleryComponent {
         this.store.dispatch(PREVIEW_SCREENSHOT({ data }));
     }
 
-    public onUpdate(screenshotUpdateDto: Update<Screenshot>): void {
-        this.store.dispatch(UPDATE_SCREENSHOT({ screenshot: screenshotUpdateDto }));
+    public onFavorite({ id, favorite }: FavoriteScreenshotDto): void {
+        if (favorite) {
+            this.store.dispatch(REMOVE_FROM_FAVORITES({ id }));
+        } else {
+            this.store.dispatch(ADD_TO_FAVORITES({ id }));
+        }
     }
 
     public trackScreenshotById(index: number, item: Screenshot): string {

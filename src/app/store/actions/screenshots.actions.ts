@@ -1,7 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Screenshot } from 'src/app/interfaces/screenshot';
 import { DownloadScreenshotDto } from 'src/app/dto';
-import { Update } from '@ngrx/entity';
 
 export const MAKE_SCREENSHOT = createAction(
     '[dashboard nav] make screenshot',
@@ -17,9 +16,13 @@ export const ADD_SCREENSHOTS = createAction(
     props<{ screenshots: Screenshot[] }>(),
 );
 
-export const UPDATE_SCREENSHOT = createAction(
-    '[screenshot card] update screenshot',
-    props<{ screenshot: Update<Screenshot>}>(),
+export const ADD_TO_FAVORITES = createAction(
+    '[screenshot card] add to favorites',
+    props<{ id: string }>(),
+);
+export const REMOVE_FROM_FAVORITES = createAction(
+    '[screenshot card] remove from favorites',
+    props<{ id: string }>(),
 );
 
 export const DELETE_SCREENSHOT = createAction(
@@ -32,8 +35,8 @@ export const DOWNLOAD_SCREENSHOT = createAction(
     props<DownloadScreenshotDto>(),
 );
 
-export const OPEN_SOURCE = createAction(
-    '[screenshot card] open source',
+export const OPEN_SCREENSHOT_SOURCE = createAction(
+    '[screenshot card] open screenshot source',
     props<{ url: string }>(),
 );
 

@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Screenshot } from 'src/app/interfaces/screenshot';
-import { DownloadScreenshotDto } from 'src/app/dto';
+import { DownloadScreenshotDto, FavoriteScreenshotDto } from 'src/app/dto';
 import { ScreenshotsEffects } from 'src/app/store/effects';
-import { Update } from '@ngrx/entity';
 
 @Component({
     selector: 'app-screenshot-card',
@@ -17,7 +16,7 @@ export class ScreenshotCardComponent {
     @Output() public readonly onOpen = new EventEmitter<string>();
     @Output() public readonly onDownload = new EventEmitter<DownloadScreenshotDto>();
     @Output() public readonly onPreview = new EventEmitter<string>();
-    @Output() public readonly onFavorite = new EventEmitter<Update<Screenshot>>();
+    @Output() public readonly onFavorite = new EventEmitter<FavoriteScreenshotDto>();
 
     public onScreenshotDelete(): void {
         this.onDelete.emit(this.screenshot.id);
@@ -36,13 +35,9 @@ export class ScreenshotCardComponent {
     }
 
     public onFavoriteChange(): void {
-        const screenshotUpdateDto: Update<Screenshot> = {
+        this.onFavorite.emit({
             id: this.screenshot.id,
-            changes: {
-                favorite: !this.screenshot.favorite,
-            },
-        };
-
-        this.onFavorite.emit(screenshotUpdateDto);
+            favorite: this.screenshot.favorite,
+        });
     }
 }
