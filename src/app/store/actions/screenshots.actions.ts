@@ -2,8 +2,12 @@ import { createAction, props } from '@ngrx/store';
 import { Screenshot } from 'src/app/interfaces/screenshot';
 import { DownloadScreenshotDto } from 'src/app/dto';
 
+export const LOAD_SCREENSHOTS = createAction(
+    '[dashboard] load screenshots',
+);
+
 export const MAKE_SCREENSHOT = createAction(
-    '[dashboard nav] make screenshot',
+    '[new screenshot] make screenshot',
 );
 
 export const ADD_SCREENSHOT = createAction(
@@ -11,32 +15,32 @@ export const ADD_SCREENSHOT = createAction(
     props<{ screenshot: Screenshot }>(),
 );
 
-export const ADD_SCREENSHOTS = createAction(
-    '[screenshot effects] add screenshots',
+export const SET_SCREENSHOTS = createAction(
+    '[screenshot effects] set screenshots',
     props<{ screenshots: Screenshot[] }>(),
 );
 
 export const ADD_TO_FAVORITES = createAction(
-    '[screenshot card] add to favorites',
+    '[screenshot gallery] add to favorites',
     props<{ id: string }>(),
 );
 export const REMOVE_FROM_FAVORITES = createAction(
-    '[screenshot card] remove from favorites',
+    '[screenshot gallery] remove from favorites',
     props<{ id: string }>(),
 );
 
 export const DELETE_SCREENSHOT = createAction(
-    '[screenshot card] delete screenshot',
+    '[screenshot gallery] delete screenshot',
     props<{ id: string }>(),
 );
 
 export const DOWNLOAD_SCREENSHOT = createAction(
-    '[screenshot card] download screenshot',
+    '[screenshot gallery] download screenshot',
     props<DownloadScreenshotDto>(),
 );
 
 export const OPEN_SCREENSHOT_SOURCE = createAction(
-    '[screenshot card] open screenshot source',
+    '[screenshot gallery] open screenshot source',
     props<{ url: string }>(),
 );
 
@@ -45,7 +49,7 @@ export const INCREASE_NEW_SCREENSHOT_COUNT = createAction(
 );
 
 export const RESET_NEW_SCREENSHOT_COUNT = createAction(
-    '[screenshot gallery] reset new screenshot count',
+    '[dashboard] reset new screenshot count',
 );
 
 export const CLEAR_SCREENSHOTS_STORAGE = createAction(
@@ -58,6 +62,6 @@ export const SET_NEW_SCREENSHOT_COUNT = createAction(
 );
 
 export const PREVIEW_SCREENSHOT = createAction(
-    `[screenshot card] preview screenshot`,
+    `[screenshot gallery] preview screenshot`,
     props<{ data: string }>(),
 );

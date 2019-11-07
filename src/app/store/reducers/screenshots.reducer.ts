@@ -3,7 +3,7 @@ import { Screenshot } from 'src/app/interfaces/screenshot';
 import { Action, createReducer, on } from '@ngrx/store';
 import {
     ADD_SCREENSHOT,
-    ADD_SCREENSHOTS, ADD_TO_FAVORITES,
+    SET_SCREENSHOTS, ADD_TO_FAVORITES,
     CLEAR_SCREENSHOTS_STORAGE,
     DELETE_SCREENSHOT,
     INCREASE_NEW_SCREENSHOT_COUNT, REMOVE_FROM_FAVORITES,
@@ -48,8 +48,8 @@ const reducer = createReducer(
     on(ADD_SCREENSHOT, (state, { screenshot }) => {
         return screenshotAdapter.addOne(screenshot, state);
     }),
-    on(ADD_SCREENSHOTS, (state, { screenshots }) => {
-        return screenshotAdapter.addMany(screenshots, state);
+    on(SET_SCREENSHOTS, (state, { screenshots }) => {
+        return screenshotAdapter.addAll(screenshots, state);
     }),
     on(ADD_TO_FAVORITES, (state, { id }) => {
        return screenshotAdapter.updateOne({

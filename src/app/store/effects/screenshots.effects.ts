@@ -3,12 +3,12 @@ import { Actions, createEffect, ofType, OnInitEffects, ROOT_EFFECTS_INIT } from 
 import { Action, select, Store } from '@ngrx/store';
 import {
     ADD_SCREENSHOT,
-    ADD_SCREENSHOTS,
     ADD_TO_FAVORITES,
     CLEAR_SCREENSHOTS_STORAGE,
     DELETE_SCREENSHOT,
     DOWNLOAD_SCREENSHOT,
     INCREASE_NEW_SCREENSHOT_COUNT,
+    LOAD_SCREENSHOTS,
     MAKE_SCREENSHOT,
     OPEN_SCREENSHOT_SOURCE,
     PREVIEW_SCREENSHOT,
@@ -16,6 +16,7 @@ import {
     REMOVE_FROM_FAVORITES,
     RESET_NEW_SCREENSHOT_COUNT,
     SET_BADGE_TEXT,
+    SET_SCREENSHOTS,
 } from 'src/app/store/actions';
 import { first, map, switchMapTo, tap, withLatestFrom } from 'rxjs/operators';
 import { AppState } from 'src/app/store/index';
@@ -36,6 +37,14 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
         return this.actions$.pipe(
             ofType(ROOT_EFFECTS_INIT),
             map(() => LOAD_SCREENSHOTS())
+        );
+    });
+
+    public readonly loadScreenshots$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(LOAD_SCREENSHOTS),
+            StorageService.browserStorageApiAvailability(),
+            tap(this.loadScreenshotsFromStorage),
         );
     }, { dispatch: false });
 
@@ -114,9 +123,9 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
     public readonly onIncreaseNewScreenshotCount$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(INCREASE_NEW_SCREENSHOT_COUNT),
-            withLatestFrom(this.store.pipe(select(selectNewScreenshotCounter))),
             StorageService.browserStorageApiAvailability(),
-            map(([ , newScreenshotCounter ]: [ Action, number ]) => SET_BADGE_TEXT({ text: `${newScreenshotCounter}` })),
+            switchMapTo(this.store.pipe(select(selectNewScreenshotCounter), first())),
+            map((newScreenshotCounter: number) => SET_BADGE_TEXT({ text: `${newScreenshotCounter}` })),
         );
     });
 
@@ -158,7 +167,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
     private loadScreenshotsFromStorage(): void {
         this.storageService.get(SCREENSHOTS_STORAGE_KEY, (items) => {
             if (items && Array.isArray(items[SCREENSHOTS_STORAGE_KEY])) {
-                this.store.dispatch(ADD_SCREENSHOTS({ screenshots: items[SCREENSHOTS_STORAGE_KEY] }));
+                this.store.dispatch(SET_SCREENSHOTS({ screenshots: items[SCREENSHOTS_STORAGE_KEY] }));
             }
         });
     }
