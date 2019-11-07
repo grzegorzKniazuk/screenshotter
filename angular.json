@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "screenshotter": {
+    "screenshoter": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -36,7 +36,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/screenshotter",
+            "outputPath": "dist/screenshoter",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -91,11 +91,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "screenshotter:build"
+            "browserTarget": "screenshoter:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "screenshotter:build:production"
+              "browserTarget": "screenshoter:build:production"
             }
           }
         },

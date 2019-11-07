@@ -35,8 +35,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
     public readonly init$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(ROOT_EFFECTS_INIT),
-            StorageService.browserStorageApiAvailability(),
-            tap(this.loadScreenshotsFromStorage),
+            map(() => LOAD_SCREENSHOTS())
         );
     }, { dispatch: false });
 
