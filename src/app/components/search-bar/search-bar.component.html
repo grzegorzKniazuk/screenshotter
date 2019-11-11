@@ -1,2 +1,4 @@
-<input (ngModelChange)="onQueryChange($event)" [(ngModel)]="query" placeholder="Search..." spellcheck="false" type="text">
+<ng-container [formGroup]="searchForm">
+    <input formControlName="query" placeholder="Search..." spellcheck="false" type="text">
+</ng-container>
 <div class="search"></div>

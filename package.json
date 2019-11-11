@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build"
+    "build": "ng build",
+    "analyze-bundle": "ng build --stats-json && webpack-bundle-analyzer dist/screenshoter/stats-es2015.json"
   },
   "private": true,
   "dependencies": {

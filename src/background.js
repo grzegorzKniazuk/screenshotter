@@ -20,6 +20,7 @@ chrome.omnibox.onInputEntered.addListener(onOmniboxInputEntered);
 
 function onConnect(port) {
     PORT = port;
+
     port.onDisconnect.addListener(deleteBadgeText);
     port.onDisconnect.addListener(resetNewScreenshotCounter);
 }
@@ -56,24 +57,23 @@ function captureNewScreenshot() {
         loadScreenshotsFromStorage(),
         loadActiveTab(),
         loadNewScreenshotCount(),
-    ]).then(([ { fileFormat, fileQuality, conflictAction, alwaysShowSaveAs, autoDownload }, screenshots, { title, url }, newScreenshotCount ]) => {
-        chrome.tabs.captureVisibleTab({ format: fileFormat, quality: fileQuality }, (dataUrl) => {
-            const screenshot = buildScreenshotData(dataUrl, title, url, fileFormat, fileQuality);
+    ]).then(([ extensionSettings, screenshots, activeTab, newScreenshotCount ]) => {
+        const { fileFormat: format, fileQuality: quality, conflictAction, alwaysShowSaveAs, autoDownload } = extensionSettings;
+        const { title, url } = activeTab;
 
-            downloadScreenshotOnEnabledAutoDownloadOption(autoDownload, screenshot, fileFormat, conflictAction, alwaysShowSaveAs);
+        chrome.tabs.captureVisibleTab({ format, quality }, (dataUrl) => {
+            const screenshot = buildScreenshotData(dataUrl, title, url, format, quality);
+
+            downloadScreenshotOnEnabledAutoDownloadOption(autoDownload, screenshot, format, conflictAction, alwaysShowSaveAs);
             updateLocalScreenshotsStorage(screenshot, screenshots);
             updateBadgeText(newScreenshotCount);
             updateNewScreenshotCounter(newScreenshotCount);
             notifySuccessfulScreenshotCapture(screenshot.data);
-
-            if (PORT) {
-                PORT.postMessage({ type: '[screenshot effects] add screenshot' });
-            }
         });
     });
 }
 
-function buildScreenshotData(dataUrl, title, url, fileFormat, fileQuality) {
+function buildScreenshotData(dataUrl, title, url, format, quality) {
     return {
         id: uuid(),
         data: dataUrl,
@@ -81,8 +81,8 @@ function buildScreenshotData(dataUrl, title, url, fileFormat, fileQuality) {
         title,
         url,
         size: dataUrlToBytes(dataUrl),
-        format: fileFormat,
-        quality: fileFormat === 'jpeg' ? fileQuality : 100,
+        format,
+        quality,
         favorite: false,
     };
 }
@@ -125,6 +125,10 @@ function notifySuccessfulScreenshotCapture(dataUrl) {
     chrome.notifications.onClicked.addListener(() => {
         chrome.tabs.create({ url: dataUrl });
     });
+
+    if (PORT) {
+        PORT.postMessage({ type: '[screenshot effects] add screenshot' });
+    }
 }
 
 function loadExtensionSettingsFromStorage() {

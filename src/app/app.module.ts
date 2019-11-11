@@ -15,7 +15,7 @@ import { DashboardNavComponent, IconComponent, ScreenshotCardComponent, SearchBa
 import { AppEffects, ScreenshotsEffects, SettingsEffects } from 'src/app/store/effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from 'src/app/material.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BytesToPipe } from 'src/app/pipes';
 import { LazyLoadImageDirective } from 'src/app/directives';
 
@@ -46,7 +46,6 @@ const modules: any[] = [
     BrowserModule,
     BrowserAnimationsModule,
     MaterialModule,
-    FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
 ];
