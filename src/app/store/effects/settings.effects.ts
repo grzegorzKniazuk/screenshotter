@@ -8,7 +8,7 @@ import { SETTINGS_STORAGE_KEY } from 'src/app/constants';
 import { AppState } from 'src/app/store/index';
 import { BaseEffects } from 'src/app/store/effects/base.effects';
 import { Settings } from 'src/app/interfaces';
-import { Bind } from 'lodash-decorators';
+import { Bind } from 'src/app/decorators';
 
 @Injectable({
     providedIn: 'root',

@@ -6,7 +6,7 @@ import { AppState } from 'src/app/store/index';
 import { BrowserActionService, StorageService, TabsService } from 'src/app/services';
 import { tap } from 'rxjs/operators';
 import { OPEN_BROWSER_TAB, REMOVE_BADGE_TEXT, SET_BADGE_TEXT, SET_NEW_SCREENSHOT_COUNT } from 'src/app/store/actions';
-import { Bind } from 'lodash-decorators';
+import { Bind } from 'src/app/decorators';
 import { NEW_SCREENSHOT_COUNT_STORAGE_KEY } from 'src/app/constants';
 
 @Injectable()

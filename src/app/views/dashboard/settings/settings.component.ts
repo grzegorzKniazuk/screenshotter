@@ -9,7 +9,7 @@ import { AppState } from 'src/app/store';
 import { CLEAR_SCREENSHOTS_STORAGE, OPEN_BROWSER_TAB, OPEN_DOWNLOAD_FOLDER, UPDATE_SETTINGS } from 'src/app/store/actions';
 import { ActivatedRoute } from '@angular/router';
 import { SETTINGS_STORAGE_KEY } from 'src/app/constants';
-import { Bind } from 'lodash-decorators';
+import { Bind } from 'src/app/decorators';
 import { ToastService } from 'src/app/services';
 import { selectBytesInUse } from 'src/app/store/selectors';
 import { Unsubscriber } from 'src/app/hocs';

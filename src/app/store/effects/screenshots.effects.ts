@@ -27,7 +27,7 @@ import { SCREENSHOTS_STORAGE_KEY } from 'src/app/constants';
 import { selectAutoDownloadState, selectNewScreenshotCounter, selectScreenshots, selectSettingsState } from 'src/app/store/selectors';
 import { FileFormat } from 'src/app/enums';
 import { DownloadScreenshotDto } from 'src/app/dto';
-import { Bind } from 'lodash-decorators';
+import { Bind } from 'src/app/decorators';
 import { BaseEffects } from 'src/app/store/effects/base.effects';
 import Tab = chrome.tabs.Tab;
 

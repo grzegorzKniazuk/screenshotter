@@ -5,7 +5,7 @@ import { select, Store } from '@ngrx/store';
 import { selectUrl } from './store/selectors';
 import { first } from 'rxjs/operators';
 import { RoutesUrls } from 'src/app/enums';
-import { Bind } from 'lodash-decorators';
+import { Bind } from 'src/app/decorators';
 
 @Component({
     selector: 'app-root',
