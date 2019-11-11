@@ -2,25 +2,26 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent, NewScreenshotComponent, ScreenshotGalleryComponent, SettingsComponent } from 'src/app/views';
 import { SettingsResolver } from 'src/app/resolvers';
+import { RoutesUrls } from 'src/app/enums';
 
 const routes: Routes = [
     {
         path: '', component: DashboardComponent, children: [
             {
                 path: '',
-                redirectTo: 'new-screenshot',
+                redirectTo: RoutesUrls.NEW_SCREENSHOT,
                 pathMatch: 'full',
             },
             {
-                path: 'new-screenshot',
+                path: RoutesUrls.NEW_SCREENSHOT,
                 component: NewScreenshotComponent,
             },
             {
-                path: 'gallery',
+                path: RoutesUrls.GALLERY,
                 component: ScreenshotGalleryComponent,
             },
             {
-                path: 'settings',
+                path: RoutesUrls.SETTINGS,
                 component: SettingsComponent,
                 resolve: { 'screenshot-settings': SettingsResolver },
             },

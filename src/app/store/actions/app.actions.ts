@@ -1,10 +1,15 @@
 import { createAction, props } from '@ngrx/store';
 
 export const SET_BADGE_TEXT = createAction(
-    '[browser] set badge text',
+    '[screenshots effects] set badge text',
     props<{ text: string }>(),
 );
 
 export const REMOVE_BADGE_TEXT = createAction(
-    '[browser] remove badge text',
+    '[screenshots effects] remove badge text',
+);
+
+export const OPEN_BROWSER_TAB = createAction(
+    '[app effects] open browser tab',
+    props<{ url: string }>(),
 );

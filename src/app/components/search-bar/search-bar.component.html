@@ -1,2 +1,2 @@
-<input type="text" placeholder="Search..." [(ngModel)]="query" (ngModelChange)="onQueryChange($event)" spellcheck="false">
+<input (ngModelChange)="onQueryChange($event)" [(ngModel)]="query" placeholder="Search..." spellcheck="false" type="text">
 <div class="search"></div>

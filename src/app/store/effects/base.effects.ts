@@ -1,16 +1,24 @@
 import { AppState } from 'src/app/store/index';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { UPDATE_BYTES_IN_USE } from 'src/app/store/actions';
 import { StorageService } from 'src/app/services';
 import { Bind } from 'lodash-decorators';
+import { ApplicationRef, NgZone } from '@angular/core';
+import { Actions } from '@ngrx/effects';
 
 export abstract class BaseEffects {
+
+    protected abstract readonly actions$: Actions;
+    protected abstract readonly ngZone: NgZone;
 
     protected constructor(
         protected readonly store: Store<AppState>,
         protected readonly storageService: StorageService,
+        protected readonly applicationRef: ApplicationRef,
     ) {
     }
+
+    public abstract ngrxOnInitEffects(): Action;
 
     @Bind
     protected updateBytesInUse(): void {
@@ -19,5 +27,10 @@ export abstract class BaseEffects {
                 this.store.dispatch(UPDATE_BYTES_IN_USE({ bytesInUse }));
             }
         });
+    }
+
+    @Bind
+    protected tick(): void {
+        this.applicationRef.tick();
     }
 }

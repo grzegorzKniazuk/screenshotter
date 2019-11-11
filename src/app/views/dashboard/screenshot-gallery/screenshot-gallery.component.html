@@ -3,11 +3,11 @@
     <ng-container *ngIf="(images$ | async).length; else noImages">
         <div *ngFor="let image of (images$ | async); trackBy: trackScreenshotById" class="screenshot">
             <app-screenshot-card (onDelete)="onDelete($event)"
-                                 (onFavorite)="onFavorite($event)"
                                  (onDownload)="onDownload($event)"
+                                 (onFavorite)="onFavorite($event)"
                                  (onOpen)="onOpen($event)"
-                                 [screenshot]="image"
-                                 (onPreview)="onPreview($event)">
+                                 (onPreview)="onPreview($event)"
+                                 [screenshot]="image">
             </app-screenshot-card>
         </div>
     </ng-container>

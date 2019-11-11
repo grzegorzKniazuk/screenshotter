@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { Observable } from 'rxjs';
-import DownloadOptions = chrome.downloads.DownloadOptions;
 import { Bind } from 'lodash-decorators';
+import DownloadOptions = chrome.downloads.DownloadOptions;
 
 @Injectable({
     providedIn: 'root',

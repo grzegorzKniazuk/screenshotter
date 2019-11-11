@@ -18,6 +18,7 @@
     &:hover {
         cursor: pointer;
     }
+
     &::before {
         content: "";
         position: absolute;
@@ -32,6 +33,7 @@
         transform: rotate(45deg);
         transition: all .5s;
     }
+
     &::after {
         content: "";
         position: absolute;
@@ -47,6 +49,7 @@
         transition: all .5s;
     }
 }
+
 input {
     font-family: 'Roboto', sans-serif;
     position: absolute;
@@ -71,23 +74,28 @@ input {
     z-index: 5;
     font-weight: bolder;
     letter-spacing: 0.1em;
+
     &:hover {
         cursor: pointer;
     }
+
     &:focus {
         width: 300px;
         opacity: 1;
         cursor: text;
     }
+
     &:focus ~ .search {
         right: -500px;
         background: #151515;
         z-index: 6;
+
         &::before {
             top: 0;
             left: 0;
             width: 25px;
         }
+
         &::after {
             top: 0;
             left: 0;
@@ -99,6 +107,7 @@ input {
             transform: rotate(-45deg);
         }
     }
+
     &::placeholder {
         color: white;
         opacity: .5;

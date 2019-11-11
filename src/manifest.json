@@ -4,7 +4,9 @@
   "version": "1.0",
   "description": "Screenshoter is the application to create screenshots and manage them.",
   "author": "Grzegorz Kniażuk",
-  "omnibox": { "keyword" : "scr" },
+  "omnibox": {
+    "keyword": "scr"
+  },
   "icons": {
     "16": "assets/browser-16.png",
     "48": "assets/browser-48.png",
@@ -13,6 +15,7 @@
   "commands": {
     "capture_new_screenshot": {
       "suggested_key": {
+        "default": "Ctrl+Shift+S",
         "windows": "Ctrl+Shift+S",
         "mac": "Command+Shift+S",
         "chromeos": "Ctrl+Shift+S",
@@ -30,7 +33,9 @@
     "default_popup": "index.html"
   },
   "background": {
-    "scripts": [ "background.js" ],
+    "scripts": [
+      "background.js"
+    ],
     "persistent": false
   },
   "offline_enabled": true,

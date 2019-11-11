@@ -3,12 +3,14 @@ import { Screenshot } from 'src/app/interfaces/screenshot';
 import { Action, createReducer, on } from '@ngrx/store';
 import {
     ADD_SCREENSHOT,
-    SET_SCREENSHOTS, ADD_TO_FAVORITES,
+    ADD_TO_FAVORITES,
     CLEAR_SCREENSHOTS_STORAGE,
     DELETE_SCREENSHOT,
-    INCREASE_NEW_SCREENSHOT_COUNT, REMOVE_FROM_FAVORITES,
+    INCREASE_NEW_SCREENSHOT_COUNT,
+    REMOVE_FROM_FAVORITES,
     RESET_NEW_SCREENSHOT_COUNT,
     SET_NEW_SCREENSHOT_COUNT,
+    SET_SCREENSHOTS,
 } from 'src/app/store/actions';
 import { TimeService } from 'src/app/services';
 
@@ -52,19 +54,19 @@ const reducer = createReducer(
         return screenshotAdapter.addAll(screenshots, state);
     }),
     on(ADD_TO_FAVORITES, (state, { id }) => {
-       return screenshotAdapter.updateOne({
-           id,
-           changes: {
-               favorite: true
-           }
-       }, state);
+        return screenshotAdapter.updateOne({
+            id,
+            changes: {
+                favorite: true,
+            },
+        }, state);
     }),
     on(REMOVE_FROM_FAVORITES, (state, { id }) => {
         return screenshotAdapter.updateOne({
             id,
             changes: {
-                favorite: false
-            }
+                favorite: false,
+            },
         }, state);
     }),
     on(DELETE_SCREENSHOT, (state, { id }) => {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MatIcon } from '@angular/material';
 
 @Component({
@@ -7,7 +7,7 @@ import { MatIcon } from '@angular/material';
     styleUrls: [ './icon.component.scss' ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IconComponent {
+export class IconComponent implements OnInit {
     @Input() public readonly size: string = '1';
     @Input() public readonly action: boolean = false;
     @Input() public readonly color = 'black';
@@ -17,6 +17,10 @@ export class IconComponent {
     constructor(
         private readonly renderer2: Renderer2,
     ) {
+    }
+
+    ngOnInit() {
+        this.renderer2.setStyle(this.matIcon._elementRef.nativeElement, 'color', this.color);
     }
 
     @HostListener('mouseenter')

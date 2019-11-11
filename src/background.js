@@ -2,6 +2,7 @@ const NEW_SCREENSHOT_COUNT_STORAGE_KEY = 'new-screenshot-count';
 const SCREENSHOT_DATA_STORAGE_KEY = 'screenshot-data';
 const SCREENSHOT_SETTINGS_STORAGE_KEY = 'screenshot-settings';
 const CAPTURE_NEW_SCREENSHOT_COMMAND = 'capture_new_screenshot';
+let PORT;
 
 const INITIAL_SETTINGS = {
     autoDownload: false,
@@ -18,6 +19,7 @@ chrome.commands.onCommand.addListener(onCommand);
 chrome.omnibox.onInputEntered.addListener(onOmniboxInputEntered);
 
 function onConnect(port) {
+    PORT = port;
     port.onDisconnect.addListener(deleteBadgeText);
     port.onDisconnect.addListener(resetNewScreenshotCounter);
 }
@@ -63,6 +65,10 @@ function captureNewScreenshot() {
             updateBadgeText(newScreenshotCount);
             updateNewScreenshotCounter(newScreenshotCount);
             notifySuccessfulScreenshotCapture(screenshot.data);
+
+            if (PORT) {
+                PORT.postMessage({ type: '[screenshot effects] add screenshot' });
+            }
         });
     });
 }
@@ -117,7 +123,7 @@ function notifySuccessfulScreenshotCapture(dataUrl) {
     chrome.notifications.create({ type: 'image', title: 'Screenshoter', message: 'Screenshot has been saved', iconUrl: 'assets/browser-48.png', imageUrl: dataUrl });
 
     chrome.notifications.onClicked.addListener(() => {
-       chrome.tabs.create({ url: dataUrl });
+        chrome.tabs.create({ url: dataUrl });
     });
 }
 

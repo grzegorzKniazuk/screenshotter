@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { ConflictAction, FileFormat } from 'src/app/enums';
 import { Observable, Subscription } from 'rxjs';
@@ -6,20 +6,22 @@ import { tap, throttleTime } from 'rxjs/operators';
 import { Settings } from 'src/app/interfaces';
 import { select, Store } from '@ngrx/store';
 import { AppState } from 'src/app/store';
-import { CLEAR_SCREENSHOTS_STORAGE, OPEN_DOWNLOAD_FOLDER, UPDATE_SETTINGS } from 'src/app/store/actions';
+import { CLEAR_SCREENSHOTS_STORAGE, OPEN_BROWSER_TAB, OPEN_DOWNLOAD_FOLDER, UPDATE_SETTINGS } from 'src/app/store/actions';
 import { ActivatedRoute } from '@angular/router';
 import { SETTINGS_STORAGE_KEY } from 'src/app/constants';
 import { Bind } from 'lodash-decorators';
-import { TabsService, ToastService } from 'src/app/services';
+import { ToastService } from 'src/app/services';
 import { selectBytesInUse } from 'src/app/store/selectors';
+import { Unsubscriber } from 'src/app/hocs';
 
+@Unsubscriber()
 @Component({
     selector: 'app-settings',
     templateUrl: './settings.component.html',
     styleUrls: [ './settings.component.scss', '../dashboard.component.scss' ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SettingsComponent implements OnInit, OnDestroy {
+export class SettingsComponent implements OnInit {
 
     public readonly fileFormats = [ FileFormat.JPEG, FileFormat.PNG ];
     public readonly conflictActions = [ ConflictAction.UNIQUIFY, ConflictAction.OVERWRITE, ConflictAction.PROMPT ];
@@ -33,7 +35,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
         private readonly store: Store<AppState>,
         private readonly activatedRoute: ActivatedRoute,
         private readonly toastService: ToastService,
-        private readonly tabsService: TabsService,
     ) {
     }
 
@@ -55,10 +56,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.watchForm();
     }
 
-    ngOnDestroy() {
-        this.subscriptions$.unsubscribe();
-    }
-
     public openDownloadFolder(): void {
         this.store.dispatch(OPEN_DOWNLOAD_FOLDER());
     }
@@ -67,6 +64,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.toastService.question('Are You sure want to delete all screenshots?').subscribe(() => {
             this.store.dispatch(CLEAR_SCREENSHOTS_STORAGE());
         });
+    }
+
+    public openExternalTab(url: string): void {
+        this.store.dispatch(OPEN_BROWSER_TAB({ url }));
     }
 
     private buildForm(): void {
@@ -100,9 +101,5 @@ export class SettingsComponent implements OnInit, OnDestroy {
     @Bind
     private updateExtensionSettings(): void {
         this.store.dispatch(UPDATE_SETTINGS({ settings: { ...this.settingsForm.getRawValue() } }));
-    }
-
-    public openExternalTab(url: string): void {
-        this.tabsService.create({ url });
     }
 }

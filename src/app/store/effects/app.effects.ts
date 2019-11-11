@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { ApplicationRef, Injectable, NgZone } from '@angular/core';
 import { BaseEffects } from 'src/app/store/effects/base.effects';
 import { Actions, createEffect, ofType, OnInitEffects, ROOT_EFFECTS_INIT } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/index';
-import { BrowserActionService, StorageService } from 'src/app/services';
+import { BrowserActionService, StorageService, TabsService } from 'src/app/services';
 import { tap } from 'rxjs/operators';
-import { REMOVE_BADGE_TEXT, SET_BADGE_TEXT, SET_NEW_SCREENSHOT_COUNT } from 'src/app/store/actions';
+import { OPEN_BROWSER_TAB, REMOVE_BADGE_TEXT, SET_BADGE_TEXT, SET_NEW_SCREENSHOT_COUNT } from 'src/app/store/actions';
 import { Bind } from 'lodash-decorators';
 import { NEW_SCREENSHOT_COUNT_STORAGE_KEY } from 'src/app/constants';
 
@@ -37,13 +37,24 @@ export class AppEffects extends BaseEffects implements OnInitEffects {
         );
     }, { dispatch: false });
 
+    public readonly onOpenBrowserTab$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(OPEN_BROWSER_TAB),
+            TabsService.browserTabsApiAvailability(),
+            tap(this.openExternalTab),
+        );
+    }, { dispatch: false });
+
     constructor(
-        private readonly actions$: Actions,
+        protected readonly actions$: Actions,
         store: Store<AppState>,
         storageService: StorageService,
         private readonly browserActionService: BrowserActionService,
+        private readonly tabsService: TabsService,
+        protected readonly ngZone: NgZone,
+        applicationRef: ApplicationRef,
     ) {
-        super(store, storageService);
+        super(store, storageService, applicationRef);
     }
 
     ngrxOnInitEffects(): Action {
@@ -51,21 +62,28 @@ export class AppEffects extends BaseEffects implements OnInitEffects {
     }
 
     @Bind
+    public openExternalTab({ url }: { url: string }): void {
+        this.tabsService.create({ url }, this.tick);
+    }
+
+    @Bind
     private updateBadgeText({ text }: { text: string }): void {
-        this.browserActionService.setBadgeText({ text });
+        this.browserActionService.setBadgeText({ text }, this.tick);
     }
 
     @Bind
     private removeBadgeText(): void {
-        this.browserActionService.setBadgeText({ text: '' });
+        this.browserActionService.setBadgeText({ text: '' }, this.tick);
     }
 
     @Bind
     private loadNewScreenshotCounterFromStorage(): void {
         this.storageService.get(NEW_SCREENSHOT_COUNT_STORAGE_KEY, (items) => {
-            if (items && !Number.isNaN(+items[NEW_SCREENSHOT_COUNT_STORAGE_KEY])) {
-                this.store.dispatch(SET_NEW_SCREENSHOT_COUNT({ newScreenshotCount: items[NEW_SCREENSHOT_COUNT_STORAGE_KEY] }));
-            }
+            this.ngZone.run(() => {
+                if (items && !Number.isNaN(+items[NEW_SCREENSHOT_COUNT_STORAGE_KEY])) {
+                    this.store.dispatch(SET_NEW_SCREENSHOT_COUNT({ newScreenshotCount: items[NEW_SCREENSHOT_COUNT_STORAGE_KEY] }));
+                }
+            });
         });
     }
 }

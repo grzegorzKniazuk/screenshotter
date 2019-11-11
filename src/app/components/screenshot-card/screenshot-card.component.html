@@ -8,14 +8,14 @@
         <mat-chip *ngIf="screenshot.quality" matTooltip="Screenshot quality">{{ screenshot.quality }}/100</mat-chip>
     </mat-chip-list>
     <div class="actions">
-        <app-icon size="3.5" [action]="true" actionColor="firebrick"
-                  [matTooltip]="screenshot.favorite ? 'Remove from favorites' : 'Add to favorites'"
-                  (click)="onFavoriteChange()">{{ screenshot.favorite ? 'favorite' : 'favorite_border' }}
+        <app-icon (click)="onFavoriteChange()" [action]="true" [matTooltip]="screenshot.favorite ? 'Remove from favorites' : 'Add to favorites'"
+                  actionColor="firebrick"
+                  size="3.5">{{ screenshot.favorite ? 'favorite' : 'favorite_border' }}
         </app-icon>
-        <app-icon size="3.5" [action]="true" matTooltip="Preview" (click)="onScreenshotPreview()">photo</app-icon>
-        <app-icon size="3.5" [action]="true" matTooltip="Download" (click)="onScreenshotDownload()">cloud_download</app-icon>
-        <app-icon size="3.5" [action]="true" [matTooltip]="screenshot.url" (click)="onOpenSource()">open_in_browser</app-icon>
-        <app-icon size="3.5" [action]="true" actionColor="red" matTooltip="delete" (click)="onScreenshotDelete()">delete</app-icon>
+        <app-icon (click)="onScreenshotPreview()" [action]="true" matTooltip="Preview" size="3.5">photo</app-icon>
+        <app-icon (click)="onScreenshotDownload()" [action]="true" matTooltip="Download" size="3.5">cloud_download</app-icon>
+        <app-icon (click)="onOpenSource()" [action]="true" [matTooltip]="screenshot.url" size="3.5">open_in_browser</app-icon>
+        <app-icon (click)="onScreenshotDelete()" [action]="true" actionColor="red" matTooltip="delete" size="3.5">delete</app-icon>
     </div>
-    <app-icon *ngIf="screenshot.favorite" size="2" class="favorite-icon" color="firebrick">favorite</app-icon>
+    <app-icon *ngIf="screenshot.favorite" class="favorite-icon" color="firebrick" size="2">favorite</app-icon>
 </div>

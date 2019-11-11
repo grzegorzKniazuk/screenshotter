@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ApplicationRef, Injectable, NgZone } from '@angular/core';
 import { Actions, createEffect, ofType, OnInitEffects, ROOT_EFFECTS_INIT } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
 import {
@@ -10,6 +10,7 @@ import {
     INCREASE_NEW_SCREENSHOT_COUNT,
     LOAD_SCREENSHOTS,
     MAKE_SCREENSHOT,
+    OPEN_BROWSER_TAB,
     OPEN_SCREENSHOT_SOURCE,
     PREVIEW_SCREENSHOT,
     REMOVE_BADGE_TEXT,
@@ -36,7 +37,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
     public readonly init$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(ROOT_EFFECTS_INIT),
-            map(() => LOAD_SCREENSHOTS())
+            map(() => LOAD_SCREENSHOTS()),
         );
     });
 
@@ -96,9 +97,9 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
         return this.actions$.pipe(
             ofType(OPEN_SCREENSHOT_SOURCE),
             TabsService.browserTabsApiAvailability(),
-            tap(({ url }) => this.openBrowserTab(url)),
+            map(({ url }) => OPEN_BROWSER_TAB({ url })),
         );
-    }, { dispatch: false });
+    });
 
     public readonly onDownloadScreenshot$ = createEffect(() => {
         return this.actions$.pipe(
@@ -140,19 +141,21 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
         return this.actions$.pipe(
             ofType(PREVIEW_SCREENSHOT),
             TabsService.browserTabsApiAvailability(),
-            tap(({ data }: { data: string }) => this.openBrowserTab(data)),
+            map(({ data }: { data: string }) => OPEN_BROWSER_TAB({ url: data })),
         );
-    }, { dispatch: false });
+    });
 
     constructor(
-        private readonly actions$: Actions,
+        protected readonly actions$: Actions,
         store: Store<AppState>,
         storageService: StorageService,
         private readonly tabsService: TabsService,
         private readonly downloadsService: DownloadsService,
         private readonly toastService: ToastService,
+        protected readonly ngZone: NgZone,
+        applicationRef: ApplicationRef,
     ) {
-        super(store, storageService);
+        super(store, storageService, applicationRef);
     }
 
     public static createDownloadScreenshotDto(screenshot: Screenshot): DownloadScreenshotDto {
@@ -166,9 +169,11 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
     @Bind
     private loadScreenshotsFromStorage(): void {
         this.storageService.get(SCREENSHOTS_STORAGE_KEY, (items) => {
-            if (items && Array.isArray(items[SCREENSHOTS_STORAGE_KEY])) {
-                this.store.dispatch(SET_SCREENSHOTS({ screenshots: items[SCREENSHOTS_STORAGE_KEY] }));
-            }
+            this.ngZone.run(() => {
+                if (items && Array.isArray(items[SCREENSHOTS_STORAGE_KEY])) {
+                    this.store.dispatch(SET_SCREENSHOTS({ screenshots: items[SCREENSHOTS_STORAGE_KEY] }));
+                }
+            });
         });
     }
 
@@ -178,19 +183,21 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
             const { title, url } = tabs.find((tab: Tab) => tab.active);
 
             this.tabsService.captureVisibleTab({ format: fileFormat, quality: fileQuality }, (dataUrl: string) => {
-                this.store.dispatch(ADD_SCREENSHOT({
-                    screenshot: {
-                        id: this.uuid(),
-                        data: dataUrl,
-                        time: new Date().toISOString(),
-                        title,
-                        url,
-                        size: this.dataUrlToBytes(dataUrl),
-                        format: fileFormat,
-                        quality: fileFormat === FileFormat.JPEG ? fileQuality : 100,
-                        favorite: false,
-                    },
-                }));
+                this.ngZone.run(() => {
+                    this.store.dispatch(ADD_SCREENSHOT({
+                        screenshot: {
+                            id: this.uuid(),
+                            data: dataUrl,
+                            time: new Date().toISOString(),
+                            title,
+                            url,
+                            size: this.dataUrlToBytes(dataUrl),
+                            format: fileFormat,
+                            quality: fileFormat === FileFormat.JPEG ? fileQuality : 100,
+                            favorite: false,
+                        },
+                    }));
+                });
             });
         });
     }
@@ -208,7 +215,7 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
 
     @Bind
     private downloadScreenshot([ { data, filename }, { conflictAction, alwaysShowSaveAs } ]: [ DownloadScreenshotDto, Settings ]): void {
-        this.downloadsService.download({ url: data, filename, conflictAction, saveAs: alwaysShowSaveAs });
+        this.downloadsService.download({ url: data, filename, conflictAction, saveAs: alwaysShowSaveAs }, this.tick);
     }
 
     @Bind
@@ -242,16 +249,12 @@ export class ScreenshotsEffects extends BaseEffects implements OnInitEffects {
 
     @Bind
     private updateLocalScreenshotsStorage(screenshots: Screenshot[]): void {
-        this.storageService.set({ [SCREENSHOTS_STORAGE_KEY]: screenshots });
-    }
-
-    private openBrowserTab(url: string): void {
-        this.tabsService.create({ url });
+        this.storageService.set({ [SCREENSHOTS_STORAGE_KEY]: screenshots }, this.tick);
     }
 
     @Bind
     private clearScreenshotsStorage(): void {
-        this.storageService.remove(SCREENSHOTS_STORAGE_KEY);
+        this.storageService.remove(SCREENSHOTS_STORAGE_KEY, this.tick);
     }
 
     private uuid() {

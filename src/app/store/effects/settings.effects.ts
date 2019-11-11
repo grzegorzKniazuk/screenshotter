@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ApplicationRef, Injectable, NgZone } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, createEffect, ofType, OnInitEffects, ROOT_EFFECTS_INIT } from '@ngrx/effects';
 import { LOAD_SETTINGS, OPEN_DOWNLOAD_FOLDER, UPDATE_SETTINGS } from 'src/app/store/actions';
@@ -43,12 +43,14 @@ export class SettingsEffects extends BaseEffects implements OnInitEffects {
 
     constructor(
         storageService: StorageService,
-        private readonly actions$: Actions,
+        protected readonly actions$: Actions,
         store: Store<AppState>,
         private readonly downloadsService: DownloadsService,
         private readonly toastService: ToastService,
+        protected readonly ngZone: NgZone,
+        applicationRef: ApplicationRef,
     ) {
-        super(store, storageService);
+        super(store, storageService, applicationRef);
     }
 
     ngrxOnInitEffects(): Action {
@@ -63,14 +65,16 @@ export class SettingsEffects extends BaseEffects implements OnInitEffects {
     @Bind
     private loadExtensionSettingsFromStorage(): void {
         this.storageService.get(SETTINGS_STORAGE_KEY, (items) => {
-            if (items && items[SETTINGS_STORAGE_KEY]) {
-                this.store.dispatch(LOAD_SETTINGS({ settings: { ...items[SETTINGS_STORAGE_KEY] } }));
-            }
+            this.ngZone.run(() => {
+                if (items && items[SETTINGS_STORAGE_KEY]) {
+                    this.store.dispatch(LOAD_SETTINGS({ settings: { ...items[SETTINGS_STORAGE_KEY] } }));
+                }
+            });
         });
     }
 
     @Bind
     private updateExtensionSettings({ settings }: { settings: Settings }): void {
-        this.storageService.set({ [SETTINGS_STORAGE_KEY]: settings });
+        this.storageService.set({ [SETTINGS_STORAGE_KEY]: settings }, this.tick);
     }
 }

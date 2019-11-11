@@ -2,7 +2,7 @@ import { Observable, Subscriber, Subscription } from 'rxjs';
 
 export abstract class ApiService {
 
-    protected get chrome() {
+    protected get chrome(): typeof chrome {
         return chrome;
     }
 
@@ -25,6 +25,6 @@ export abstract class ApiService {
 
     protected browserApiAvailability(apiName: string): boolean {
         // @ts-ignore
-        return this.chrome && this.chrome[apiName];
+        return this.chrome && !!this.chrome[apiName];
     }
 }
