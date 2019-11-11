@@ -1,20 +1,14 @@
 import { Injectable } from '@angular/core';
-import * as moment from 'moment';
-import { unitOfTime } from 'moment';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TimeService {
-    public static byFormat(format: string): string {
-        return moment().format(format);
+    public static isAfter(date: string, compareTo: string): boolean {
+        return new Date(date).getTime() > new Date(compareTo).getTime();
     }
 
-    public static isAfter(data: string, compareTo: string, granularity?: unitOfTime.StartOf): boolean {
-        return moment(data).isAfter(compareTo, granularity);
-    }
-
-    public static isSame(data: string, compareTo: string, granularity?: unitOfTime.StartOf): boolean {
-        return moment(data).isSame(compareTo, granularity);
+    public static isSame(date: string, compareTo: string): boolean {
+        return new Date(date).getTime() === new Date(compareTo).getTime();
     }
 }

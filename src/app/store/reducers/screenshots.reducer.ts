@@ -29,11 +29,11 @@ const screenshotAdapter = createEntityAdapter<Screenshot>({
             return -1;
         }
 
-        if (TimeService.isSame(a.time, b.time, 'minute')) {
+        if (TimeService.isSame(a.time, b.time)) {
             return 0;
         }
 
-        if (TimeService.isAfter(a.time, b.time, 'minute')) {
+        if (TimeService.isAfter(a.time, b.time)) {
             return -1;
         } else {
             return 1;
