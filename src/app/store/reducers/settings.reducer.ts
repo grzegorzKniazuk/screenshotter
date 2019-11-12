@@ -11,6 +11,7 @@ const initialSettingsState: SettingsState = {
     autoDownload: false,
     fileFormat: FileFormat.JPEG,
     fileQuality: 100,
+    notifyOnNew: false,
     conflictAction: ConflictAction.UNIQUIFY,
     alwaysShowSaveAs: false,
     bytesInUse: null,

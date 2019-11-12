@@ -42,6 +42,10 @@ export class SettingsComponent implements OnInit {
         return this.settingsForm.get('autoDownload');
     }
 
+    public get notifyOnNewControl(): AbstractControl {
+        return this.settingsForm.get('notifyOnNew');
+    }
+
     public get alwaysShowSaveAsControl(): AbstractControl {
         return this.settingsForm.get('alwaysShowSaveAs');
     }
@@ -75,6 +79,7 @@ export class SettingsComponent implements OnInit {
             autoDownload: [ this.settings.autoDownload ],
             fileFormat: [ this.settings.fileFormat || FileFormat.JPEG ],
             fileQuality: [ this.settings.fileQuality || 100 ],
+            notifyOnNew: [ this.settings.notifyOnNew || false ],
             conflictAction: [ this.settings.conflictAction || ConflictAction.UNIQUIFY ],
             alwaysShowSaveAs: [ this.settings.alwaysShowSaveAs || false ],
         });

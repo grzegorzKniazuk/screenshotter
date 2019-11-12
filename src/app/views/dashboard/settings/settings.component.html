@@ -14,6 +14,8 @@
                         <mat-hint>(only jpeg)</mat-hint>
                     </label>
                     <mat-slider aria-labelledby="file-quality-label" formControlName="fileQuality" max="100" min="1" step="1" thumbLabel></mat-slider>
+                    <label id="notify-on-new-screenshot">System notify on new screenshot (by shortcut only)</label>
+                    <mat-slide-toggle aria-labelledby="notify-on-new-screenshot" formControlName="notifyOnNew">{{ notifyOnNewControl.value ? 'Yes' : 'No' }}</mat-slide-toggle>
                 </div>
             </mat-expansion-panel>
             <mat-expansion-panel [expanded]="true">
@@ -22,7 +24,7 @@
                 </mat-expansion-panel-header>
                 <div class="form-panel-content">
                     <label id="auto-download-label">Automatically download new screenshots</label>
-                    <mat-slide-toggle aria-labelledby="uto-download-label" formControlName="autoDownload">{{ autoDownloadControl.value ? 'Yes' : 'No' }}</mat-slide-toggle>
+                    <mat-slide-toggle aria-labelledby="auto-download-label" formControlName="autoDownload">{{ autoDownloadControl.value ? 'Yes' : 'No' }}</mat-slide-toggle>
                     <label id="conflict-action-group-label">Action to take if filename already exists</label>
                     <mat-radio-group aria-labelledby="conflict-action-group-label" formControlName="conflictAction">
                         <mat-radio-button *ngFor="let conflictAction of conflictActions" [value]="conflictAction">{{ conflictAction }}</mat-radio-button>

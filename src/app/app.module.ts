@@ -17,7 +17,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BytesToPipe } from 'src/app/pipes';
-import { LazyLoadImageDirective } from 'src/app/directives';
 
 const entryComponents: any[] = [];
 
@@ -38,9 +37,7 @@ const pipes: any[] = [
     BytesToPipe,
 ];
 
-const directives: any[] = [
-    LazyLoadImageDirective,
-];
+const directives: any[] = [];
 
 const modules: any[] = [
     BrowserModule,

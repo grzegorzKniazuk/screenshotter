@@ -58,7 +58,7 @@ function captureNewScreenshot() {
         loadActiveTab(),
         loadNewScreenshotCount(),
     ]).then(([ extensionSettings, screenshots, activeTab, newScreenshotCount ]) => {
-        const { fileFormat: format, fileQuality: quality, conflictAction, alwaysShowSaveAs, autoDownload } = extensionSettings;
+        const { fileFormat: format, fileQuality: quality, conflictAction, alwaysShowSaveAs, notifyOnNew, autoDownload } = extensionSettings;
         const { title, url } = activeTab;
 
         chrome.tabs.captureVisibleTab({ format, quality }, (dataUrl) => {
@@ -68,7 +68,7 @@ function captureNewScreenshot() {
             updateLocalScreenshotsStorage(screenshot, screenshots);
             updateBadgeText(newScreenshotCount);
             updateNewScreenshotCounter(newScreenshotCount);
-            notifySuccessfulScreenshotCapture(screenshot.data);
+            notifySuccessfulScreenshotCapture(notifyOnNew, screenshot.data);
         });
     });
 }
@@ -115,19 +115,28 @@ function updateNewScreenshotCounter(newScreenshotCount) {
     chrome.storage.local.set({ [NEW_SCREENSHOT_COUNT_STORAGE_KEY]: newScreenshotCount + 1 });
 }
 
-function notifySuccessfulScreenshotCapture(dataUrl) {
+function notifySuccessfulScreenshotCapture(notifyOnNew, dataUrl) {
     if (chrome.notifications.onClicked.hasListeners()) {
         chrome.notifications.onClicked.removeListener();
     }
 
-    chrome.notifications.create({ type: 'image', title: 'Screenshoter', message: 'Screenshot has been saved', iconUrl: 'assets/browser-48.png', imageUrl: dataUrl });
+    if (notifyOnNew) {
+        chrome.notifications.create({ type: 'image', title: 'Screenshoter', message: 'Screenshot has been saved', iconUrl: 'assets/browser-48.png', imageUrl: dataUrl });
 
-    chrome.notifications.onClicked.addListener(() => {
-        chrome.tabs.create({ url: dataUrl });
-    });
-
+        chrome.notifications.onClicked.addListener(() => {
+            chrome.tabs.create({ url: dataUrl });
+        });
+    }
+    console.log(PORT);
     if (PORT) {
-        PORT.postMessage({ type: '[screenshot effects] add screenshot' });
+        try {
+            PORT.postMessage({ type: '[screenshot effects] add screenshot' });
+        } catch (e) {
+            if (chrome.runtime.onConnect.hasListeners()) {
+                chrome.runtime.onConnect.removeListener();
+            }
+            chrome.runtime.onConnect.addListener(onConnect);
+        }
     }
 }
 
