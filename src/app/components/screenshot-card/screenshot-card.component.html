@@ -1,6 +1,6 @@
 <div class="container">
     <h2 [matTooltip]="screenshot.title">{{ screenshot.title }}</h2>
-    <img [alt]="screenshot.title" [attr.data-src]="screenshot.data" appLazyLoadImage>
+    <img [alt]="screenshot.title" [src]="screenshot.data">
     <div class="caption">{{ screenshot.time | date:'short' }}</div>
     <mat-chip-list>
         <mat-chip *ngIf="screenshot.size" matTooltip="Screenshot size">{{ screenshot.size | bytesTo:'mb' | number:'0.2-2' }} MB</mat-chip>
